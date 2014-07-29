@@ -25,7 +25,7 @@ public class C24ConnectorTest extends FunctionalTestCase
 	@Override
     protected String getConfigResources()
     {
-        return "mule-config.xml";
+        return "democ24app.xml";
     }
 
     @Test
@@ -34,7 +34,7 @@ public class C24ConnectorTest extends FunctionalTestCase
 
         String payload = FileUtils.readFileToString(new File("src/test/resources/Customers.xml"));
         String expected = FileUtils.readFileToString(new File("src/test/resources/Customers.txt"));
-        runFlowAndExpect("testFlow", expected, payload);
+        runFlowAndExpect("democ24appFlow1", expected, payload);
         assertTrue(true);
     }
 

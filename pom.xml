@@ -21,34 +21,33 @@
         <category>Community</category>
         <licensePath>LICENSE.md</licensePath>
         <devkit.studio.package.skip>false</devkit.studio.package.skip>
+        <c24.api.version>4.6.1</c24.api.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>biz.c24.io</groupId>
             <artifactId>c24-io-api</artifactId>
-            <version>4.6.1</version>
+            <version>${c24.api.version}</version>
             <scope>provided</scope>
         </dependency>
 
-        
-<!--        <dependency>
-            <groupId>fix44</groupId>
-            <artifactId>fix44</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>swift-2012</groupId>
-            <artifactId>swift-2012</artifactId>
-            <version>2012</version>
-            <scope>provided</scope>
-        </dependency>
--->
+
+        <!-- <dependency> <groupId>fix44</groupId> <artifactId>fix44</artifactId> 
+            <version>1.0</version> <scope>provided</scope> </dependency> <dependency> 
+            <groupId>swift-2012</groupId> <artifactId>swift-2012</artifactId> <version>2012</version> 
+            <scope>provided</scope> </dependency> -->
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>0.9.9-RC2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>biz.c24.io</groupId>
+            <artifactId>gettingstarted</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -60,6 +59,19 @@
     </scm>
 
     <repositories>
+        <!-- We include some generated jars - make them available to maven -->
+        <repository>
+            <id>lib</id>
+            <name>lib</name>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <url>file://${project.basedir}/lib</url>
+        </repository>
         <repository>
             <id>mulesoft-releases</id>
             <name>MuleSoft Releases Repository</name>
