@@ -1,19 +1,12 @@
 /**
- *
- * Copyright (c) MuleSoft, Inc.  All rights reserved.  http://www.mulesoft.com
- *
- * The software in this package is published under the terms of the CPAL v1.0
- * license, a copy of which has been included with this distribution in the
- * LICENSE.txt file.
+ * Copyright (c) C24 Technologies Limited. All rights reserved.
  */
 package com.mulesoft.c24;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,7 +16,6 @@ import javax.inject.Inject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mule.api.MessagingException;
 import org.mule.api.MuleEvent;
 import org.mule.api.annotations.Configurable;
 import org.mule.api.annotations.MetaDataSwitch;
@@ -44,21 +36,16 @@ import org.mule.common.metadata.MetaDataKey;
 import org.mule.common.metadata.builder.DefaultMetaDataBuilder;
 import org.mule.common.metadata.builder.PojoMetaDataBuilder;
 import org.mule.config.i18n.CoreMessages;
-import org.reflections.ReflectionUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
-import org.springframework.context.annotation.Configuration;
-
 import biz.c24.api.LicenseException;
 import biz.c24.io.api.C24;
 import biz.c24.io.api.C24.C24Reader;
 import biz.c24.io.api.data.ComplexDataObject;
-import biz.c24.io.api.data.Element;
 import biz.c24.io.api.data.ValidationException;
-import biz.c24.io.api.presentation.Source;
 import biz.c24.io.api.transform.Transform;
 
 @Module(name = "c24", schemaVersion = "1.0-SNAPSHOT", friendlyName = "C24 Connector", metaData = MetaDataSwitch.DYNAMIC)

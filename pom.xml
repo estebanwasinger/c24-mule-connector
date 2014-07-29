@@ -96,5 +96,38 @@
             <url>http://repo.c24io.net/nexus/content/groups/public</url>
         </repository>
     </repositories>
-
+    <build>
+        <plugins>
+            <plugin>
+                <!-- The parent definition of this task gives us no way to 
+                    configure exclusions so we need to override it -->
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <version>1.8.0</version>
+                <configuration>
+                    <header>LICENSE_HEADER.txt</header>
+                    <excludes>
+                        <exclude>target/**</exclude>
+                        <exclude>lib/**</exclude>
+                        <exclude>**/.gitignore</exclude>
+                        <exclude>**/*.txt</exclude>
+                        <exclude>**/*.ftl</exclude>
+                        <exclude>**/*.xml</exclude>
+                        <exclude>**/*.properties</exclude>
+                        <exclude>**/*.sample</exclude>
+                        <exclude>**/*.md</exclude>
+                        <exclude>**/build-number.txt</exclude>
+                        <!-- bamboo -->
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
