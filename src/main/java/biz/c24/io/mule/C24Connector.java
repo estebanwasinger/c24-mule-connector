@@ -1,7 +1,7 @@
 /**
  * Copyright (c) C24 Technologies Limited. All rights reserved.
  */
-package com.mulesoft.c24;
+package biz.c24.io.mule;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -48,9 +48,22 @@ import biz.c24.io.api.data.ComplexDataObject;
 import biz.c24.io.api.data.ValidationException;
 import biz.c24.io.api.transform.Transform;
 
-@Module(name = "c24", schemaVersion = "1.0-SNAPSHOT", friendlyName = "C24 Connector", metaData = MetaDataSwitch.DYNAMIC)
+/**
+ * C24 Mule Connector
+ * 
+ * @author C24 Technologies Limited
+ * 
+ * The C24 Connector allows you to use C24 iO message parsing, validation, transformation and generation
+ * in your Mule flows.
+ *
+ */
+@Module(name = "c24", schemaVersion = "1.0.0", friendlyName = "C24 Connector", metaData = MetaDataSwitch.DYNAMIC, 
+        namespace = "http://schema.c24.biz/mule", schemaLocation = "http://schema.c24.biz/mule.xsd")
 public class C24Connector implements ConnectorMetaDataEnabled  {
     
+    /**
+     * The C24 iO licence to use (required for licensed data models only)
+     */
     @Optional
     @Configurable
     private String licenceFile;
@@ -58,6 +71,8 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
     protected transient Log logger = LogFactory.getLog(getClass());
     
     protected FileWriter writer = null;
+    
+    private final boolean DEBUG = false;
     
     protected java.io.Writer getWriter() {
         if(writer == null) {
@@ -71,12 +86,14 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
     }
     
     protected void debug(String str) {
-        try {
-            getWriter().write(str);
-            getWriter().write('\n');
-            getWriter().flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if(DEBUG) {
+            try {
+                getWriter().write(str);
+                getWriter().write('\n');
+                getWriter().flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
     
@@ -136,7 +153,7 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
         Transform t = (Transform) transformClass.newInstance();
         
         if(t.getInputCount() != 1 || t.getOutputCount() != 1) {
-            throw new C24Exception(CoreMessages.createStaticMessage("The Mule C24Transformer only currently supports 1:1 transformations"), event);
+            throw new C24Exception(CoreMessages.createStaticMessage("The Mule C24 Connector only currently supports 1:1 transformations"), event);
         }
         
         return t;
@@ -148,18 +165,18 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
      * {@sample.xml ../../../doc/C24-connector.xml.sample c24:transform}
      *
      * @param transform The Transform to use
-     * @param object   The String, Reader or InputStream to parse into a C24ComplexObject
+     * @param source The String, Reader or InputStream to parse into a C24 Object
      * @param encoding The encoding of the input data
      * @param validateInput Whether the source message should be validated post-parsing
      * @param validateOutput Whether the result of the transformation should be checked for validity
      * @param event The Mule event
-     * @return The marshalled result of the transformation
+     * @return The marshaled result of the transformation
      * @throws Exception An exception when there's an error
      */
     @Processor
     @Inject
     public Object transform(@MetaDataKeyParam(affects=MetaDataKeyParamAffectsType.OUTPUT) String transform,
-                            @Default("#[payload]") Object obj, 
+                            @Default("#[payload]") Object source, 
                             @Default("") String encoding,
                             @Default("true") boolean validateInput,
                             @Default("true") boolean validateOutput,
@@ -171,22 +188,22 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
             Transform t = getTransform(transform, event);
              
             ComplexDataObject src = null;
-            if(obj instanceof ComplexDataObject) {
-                src = (ComplexDataObject) obj;
+            if(source instanceof ComplexDataObject) {
+                src = (ComplexDataObject) source;
             } else {
                 C24Reader<? extends ComplexDataObject> reader = C24.parse(t.getInput(0).getType().getValidObjectClass());
                 if(encoding != null && encoding.length() > 0) {
                     reader.using(encoding);
                 }
                 
-                if(obj instanceof Reader) {
-                    src = reader.from((Reader)obj);
-                } else if(obj instanceof InputStream) {
-                    src = reader.from((InputStream)obj);            
-                } else if(obj instanceof String) {
-                    src = reader.from((String)obj);            
+                if(source instanceof Reader) {
+                    src = reader.from((Reader)source);
+                } else if(source instanceof InputStream) {
+                    src = reader.from((InputStream)source);            
+                } else if(source instanceof String) {
+                    src = reader.from((String)source);            
                 } else {
-                    throw new C24Exception(CoreMessages.createStaticMessage("Can't instantiate reader for unknown payload type: " + obj.getClass()), event);
+                    throw new C24Exception(CoreMessages.createStaticMessage("Can't instantiate reader for unknown payload type: " + source.getClass()), event);
                 }
             }
             

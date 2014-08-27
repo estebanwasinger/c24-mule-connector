@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.mulesoft</groupId>
-    <artifactId>mule-c24-connector</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <groupId>biz.c24.io.mule</groupId>
+    <artifactId>c24-mule-connector</artifactId>
+    <version>1.0.0</version>
     <packaging>mule-module</packaging>
     <name>C24 Connector</name>
 
@@ -21,7 +21,7 @@
         <category>Community</category>
         <licensePath>LICENSE.md</licensePath>
         <devkit.studio.package.skip>false</devkit.studio.package.skip>
-        <c24.api.version>4.6.1</c24.api.version>
+        <c24.api.version>4.6.5</c24.api.version>
     </properties>
 
     <dependencies>
@@ -32,11 +32,6 @@
             <scope>provided</scope>
         </dependency>
 
-
-        <!-- <dependency> <groupId>fix44</groupId> <artifactId>fix44</artifactId> 
-            <version>1.0</version> <scope>provided</scope> </dependency> <dependency> 
-            <groupId>swift-2012</groupId> <artifactId>swift-2012</artifactId> <version>2012</version> 
-            <scope>provided</scope> </dependency> -->
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
@@ -50,13 +45,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-
-    <scm>
-        <connection>scm:git:git://github.com:mulesoft/mule-c24-connector.git</connection>
-        <developerConnection>scm:git:git@github.com:mulesoft/mule-c24-connector.git</developerConnection>
-        <url>http://github.com/mulesoft/mule-c24-connector</url>
-    </scm>
 
     <repositories>
         <!-- We include some generated jars - make them available to maven -->
@@ -99,6 +87,14 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
                 <!-- The parent definition of this task gives us no way to 
                     configure exclusions so we need to override it -->
                 <groupId>com.mycila.maven-license-plugin</groupId>
@@ -130,4 +126,18 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>c24</id>
+            <name>C24 Maven Repository</name>
+            <url>http://repo.c24io.net:8081/nexus/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <uniqueVersion>false</uniqueVersion>
+            <id>c24-snapshot</id>
+            <name>C24 Maven Snapshot Repository</name>
+            <url>http://repo.c24io.net:8081/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>

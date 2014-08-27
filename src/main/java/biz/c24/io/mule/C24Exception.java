@@ -2,7 +2,7 @@
  * Copyright (c) C24 Technologies Limited. All rights reserved.
  */
 
-package com.mulesoft.c24;
+package biz.c24.io.mule;
 
 import org.mule.api.MessagingException;
 import org.mule.api.MuleEvent;
