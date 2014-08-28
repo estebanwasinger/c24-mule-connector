@@ -57,8 +57,8 @@ import biz.c24.io.api.transform.Transform;
  * in your Mule flows.
  *
  */
-@Module(name = "c24", schemaVersion = "1.0.0", friendlyName = "C24 Connector", metaData = MetaDataSwitch.DYNAMIC, 
-        namespace = "http://schema.c24.biz/mule", schemaLocation = "http://schema.c24.biz/mule.xsd")
+@Module(name = "c24", schemaVersion = "1.0.0", friendlyName = "C24 Connector", metaData = MetaDataSwitch.DYNAMIC)
+//        namespace = "http://schema.c24.biz/mule", schemaLocation = "http://schema.c24.biz/mule.xsd")
 public class C24Connector implements ConnectorMetaDataEnabled  {
     
     /**
