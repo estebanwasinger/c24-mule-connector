@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>biz.c24.io.mule</groupId>
     <artifactId>c24-mule-connector</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>mule-module</packaging>
     <name>C24 Connector</name>
 
@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <junit.version>4.9</junit.version>
+        <junit.version>4.11</junit.version>
         <mockito.version>1.8.2</mockito.version>
         <jdk.version>1.6</jdk.version>
         <category>Community</category>
@@ -30,6 +30,19 @@
             <artifactId>c24-io-api</artifactId>
             <version>${c24.api.version}</version>
             <scope>provided</scope>
+            <!-- AnyPoint Dev Kit tests break with xerces != 2.9.1 -->
+            <exclusions>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+         
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.9.1</version>
         </dependency>
 
         <dependency>
@@ -39,9 +52,29 @@
         </dependency>
 
         <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-file</artifactId>
+            <version>${mule.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>biz.c24.io</groupId>
             <artifactId>gettingstarted</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-file</artifactId>
+            <version>${mule.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -104,6 +137,7 @@
                     <header>LICENSE_HEADER.txt</header>
                     <excludes>
                         <exclude>target/**</exclude>
+                        <exclude>deployed/**</exclude>
                         <exclude>lib/**</exclude>
                         <exclude>**/.gitignore</exclude>
                         <exclude>**/*.txt</exclude>
