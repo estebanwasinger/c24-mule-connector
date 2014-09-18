@@ -22,8 +22,6 @@ import org.mule.api.annotations.MetaDataSwitch;
 import org.mule.api.annotations.Module;
 import org.mule.api.annotations.Processor;
 import org.mule.api.annotations.param.Default;
-import org.mule.api.annotations.param.MetaDataKeyParam;
-import org.mule.api.annotations.param.MetaDataKeyParamAffectsType;
 import org.mule.api.annotations.param.Optional;
 import org.mule.common.DefaultResult;
 import org.mule.common.Result;
@@ -31,16 +29,17 @@ import org.mule.common.Result.Status;
 import org.mule.common.metadata.ConnectorMetaDataEnabled;
 import org.mule.common.metadata.DefaultMetaData;
 import org.mule.common.metadata.DefaultMetaDataKey;
+import org.mule.common.metadata.DefaultPojoMetaDataModel;
 import org.mule.common.metadata.MetaData;
 import org.mule.common.metadata.MetaDataKey;
-import org.mule.common.metadata.builder.DefaultMetaDataBuilder;
-import org.mule.common.metadata.builder.PojoMetaDataBuilder;
+import org.mule.common.metadata.MetaDataModel;
 import org.mule.config.i18n.CoreMessages;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
+
 import biz.c24.api.LicenseException;
 import biz.c24.io.api.C24;
 import biz.c24.io.api.C24.C24Reader;
@@ -175,11 +174,11 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
      */
     @Processor
     @Inject
-    public Object transform(@MetaDataKeyParam(affects=MetaDataKeyParamAffectsType.OUTPUT) String transform,
-                            @Default("#[payload]") Object source, 
-                            @Default("") String encoding,
-                            @Default("true") boolean validateInput,
-                            @Default("true") boolean validateOutput,
+    public String transform(String transform,
+                            @Optional @Default("#[payload]") Object source, 
+                            @Optional @Default("") String encoding,
+                            @Optional @Default("true") boolean validateInput,
+                            @Optional @Default("true") boolean validateOutput,
                             MuleEvent event) throws Exception {
 
         
@@ -244,11 +243,14 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
                         debug("got none");
                         // No. Scan the classloader instead.
                         ConfigurationBuilder builder = new ConfigurationBuilder();
+
                         if(getBasePackage() != null) {
                             builder.filterInputsBy(new FilterBuilder().include(getBasePackage()));
                         }
+
                         debug("build config");
-                        builder.setUrls(ClasspathHelper.forClassLoader())
+                        
+                        builder.setUrls(ClasspathHelper.forJavaClassPath())
                                .setScanners(new SubTypesScanner());
                         
                         r = new Reflections(builder);
@@ -271,7 +273,7 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
             Collection<Class<? extends Transform>> classes = getReflections().getSubTypesOf(Transform.class);
             debug("Creating metadata keys");
             for (Class<?> c : classes) {
-                keys.add(new DefaultMetaDataKey(c.getName(), c.getName()));
+                keys.add(new DefaultMetaDataKey(c.getName(), c.getName().replaceAll(".*\\.", "")));
             }
             debug("done");
 
@@ -289,9 +291,11 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
             debug("Getting class for " + key.getId());
             Class<?> object = Class.forName(key.getId());
             debug("got class");
-            PojoMetaDataBuilder<?> metaDataBuilder = new DefaultMetaDataBuilder().createPojo(object);
-            debug("Constructing and returning");
-            return new DefaultResult<MetaData>(new DefaultMetaData(metaDataBuilder.build()));
+            MetaDataModel model = new DefaultPojoMetaDataModel(object);
+            return new DefaultResult<MetaData>(new DefaultMetaData(model));
+            //PojoMetaDataBuilder<?> metaDataBuilder = new DefaultMetaDataBuilder().createPojo(object);
+            //debug("Constructing and returning");
+            //return new DefaultResult<MetaData>(new DefaultMetaData(metaDataBuilder.build()));
         } catch(Exception ex) {
             return new DefaultResult<MetaData>(null, Status.FAILURE, "Could not retrieve metadata for key " + key.getId() + ": " + ex.getMessage());
         }

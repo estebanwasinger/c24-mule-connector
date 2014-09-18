@@ -4,66 +4,86 @@
 
 package biz.c24.io.mule;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
+import java.util.List;
 
 import org.junit.Test;
-import org.mule.construct.Flow;
-import org.mule.tck.junit4.FunctionalTestCase;
-import org.mule.util.FileUtils;
+import org.mule.common.Result;
+import org.mule.common.Result.Status;
+import org.mule.common.metadata.MetaData;
+import org.mule.common.metadata.MetaDataKey;
+import org.mule.common.metadata.datatype.DataType;
 
-public class C24ConnectorTest extends FunctionalTestCase
-{
-	@Override
-    protected String getConfigResources()
-    {
-        return "democ24app.xml";
+import biz.c24.io.api.transform.Transform;
+import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
+
+public class C24ConnectorTest {
+
+    private C24Connector connector = new C24Connector();
+    
+    private void testDataSense() throws ClassNotFoundException {
+        
+        Result<List<MetaDataKey>> result = connector.getMetaDataKeys();
+        assertTrue(result.getStatus().compareTo(Status.SUCCESS) == 0);
+        assertThat(result.get(), is(not(nullValue())));
+        
+        boolean foundTestTransform = false;
+        
+        for(MetaDataKey key : result.get()) {
+            
+            assertTrue(Transform.class.isAssignableFrom(Class.forName(key.getId())));
+            
+            if(connector.getBasePackage() != null) {
+                if(connector.getBasePackage().contains("*")) {
+                    assertTrue(key.getId().matches(connector.getBasePackage()));
+                } else {
+                    assertTrue(key.getId().startsWith(connector.getBasePackage()));
+                }
+            }
+            
+            if(key.getDisplayName().equals("GenerateContactListTransform")) {
+                foundTestTransform = true;
+                assertThat(key.getId(), is("biz.c24.io.gettingstarted.transform.GenerateContactListTransform"));
+                
+                MetaData metaData = connector.getMetaData(key).get();
+                assertThat(metaData, is(not(nullValue())));
+                assertThat(metaData.getPayload().getDataType(), is(DataType.POJO));
+            }
+        }
+        
+        assertThat(foundTestTransform, is(true));
+        
     }
-
+    
     @Test
-    public void testFlow() throws Exception
-    {
-
-        String payload = FileUtils.readFileToString(new File("src/test/resources/Customers.xml"));
-        String expected = FileUtils.readFileToString(new File("src/test/resources/Customers.txt"));
-        runFlowAndExpect("democ24appFlow1", expected, payload);
-        assertTrue(true);
-    }
-
-    /**
-    * Run the flow specified by name and assert equality on the expected output
-    *
-    * @param flowName The name of the flow to run
-    * @param expect The expected output
-    */
-    protected <T> void runFlowAndExpect(String flowName, T expect) throws Exception
-    {
-        assertEquals(expect, this.runFlow(flowName));
+    public void testUnconstrainedDataSense() throws ClassNotFoundException {
+        connector.setBasePackage(null);
+        testDataSense();
     }
     
-    /**
-     * Run the flow specified by name using the specified payload and assert
-     * equality on the expected output
-     *
-     * @param flowName The name of the flow to run
-     * @param expect The expected output
-     * @param payload The payload of the input event
-     */
-    protected <T, U> void runFlowAndExpect(String flowName, T expect, U payload) throws Exception
-    {
-        assertEquals(expect, this.runFlow(flowName, payload));
+    @Test
+    public void testConstrainedMatchingDataSense() throws ClassNotFoundException {
+        connector.setBasePackage("biz.c24.io.*");
+        testDataSense();
+    }
+
+    
+    @Test
+    public void testConstrainedNonMatchingDataSense() {
+        connector.setBasePackage("nonexistent.test.*");
+        
+        Result<List<MetaDataKey>> result = connector.getMetaDataKeys();
+        assertTrue(result.getStatus().compareTo(Status.SUCCESS) == 0);
+        assertThat(result.get(), is(not(nullValue())));
+        assertThat(result.get().size(), is(0));
+
     }
     
-
-    /**
-     * Retrieve a flow by name from the registry
-     *
-     * @param name Name of the flow to retrieve
-     */
-    protected Flow lookupFlowConstruct(String name)
-    {
-        return (Flow) muleContext.getRegistry().lookupFlowConstruct(name);
+  /*  
+    @Test
+    public void testConnector() {
+        C24Connector connector = new C24Connector();
+  
     }
+   */ 
 }
