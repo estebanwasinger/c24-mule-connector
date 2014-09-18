@@ -1,489 +1,90 @@
+C24 TECHNOLOGIES LIMITED
+========================
 
-Common Public Attribution License Version 1.0 (CPAL)
-====================================================
+## C24 Integration Objects End User License Agreement (C24-iO EULA) - Base Installation ClickWrap
 
 
-1. "Definitions"
+CAUTION: YOU SHOULD CAREFULLY READ THE FOLLOWING TERMS AND CONDITIONS OF THIS AGREEMENT BEFORE INSTALLING OR USING THE SOFTWARE AND DOCUMENTATION THIS AGREEMENT RELATES TO. BY ACCEPTING THIS AGREEMENT YOU ARE CONSENTING TO BE BOUND BY THE TERMS AND CONDITIONS CONTAINED HEREIN AND ACKNOWLEDGING YOUR AUTHORITY TO DO SO ON BEHALF OF YOUR COMPANY (IF APPLICABLE). IF YOU DO NOT AGREE WITH THESE TERMS AND CONDITIONS, DO NOT PROCEED WITH THE INSTALLATION OF THE SOFTWARE. YOU SHOULD PROMPTLY RETURN THE SOFTWARE, DOCUMENTATION, AND ALL COPIES THEREOF TO THE SUPPLIER FROM WHICH IT WAS ACQUIRED FOR A FULL REFUND OF THE LICENSE FEES, IF ANY, PAID FOR THE SOFTWARE. THE TERM 'PROMPTLY' AS USED HEREIN SHALL MEAN NO LATER THAN THIRTY (30) DAYS FOLLOWING THE DELIVERY OF THE SOFTWARE TO YOU.
 
-1.0.1 "Commercial Use" means distribution or otherwise making the Covered
-Code available to a third party.
+1.  License Grant   
 
-1.1 "Contributor" means each entity that creates or contributes to the creation
-of Modifications.
+    1.1	Subject to the terms and conditions contained herein, C24 TECHNOLOGIES LIMITED ('C24') grants you ('Licensee') a non-exclusive, non-transferable, limited license (without the right to sublicense) to use the C24 Integration Objects (C24-iO) Studio and C24-iO Run-Time software product(s) (each individually, a 'Product'). 
 
-1.2 "Contributor Version" means the combination of the Original Code, prior
-Modifications used by a Contributor, and the Modifications made by that
-particular Contributor.
+    1.2 Any update, patch, service pack, value-add pack, prepackaged module and/or new release, version or enhancement issued to Licensee by C24 relating to the Product (each an 'Update') replaces part or all of a Product or Update previously licensed to Licensee and shall terminate such previously licensed Product or Update to the extent replaced by the Update.  If C24 is obligated to pass through terms and conditions associated with technology added to or included in an Update, then, as a condition of its use of such Update, Licensee agrees to be bound by such additional terms and conditions.  Such additional terms and conditions may be set forth in a license agreement accompanying the Update and issued by C24.  In addition and subject to the terms and conditions contained herein, C24 grants Licensee a non-exclusive, non-transferable, limited license (without the right to sublicense) to use the Documentation (hereinafter defined) in connection with the Product.  
 
-1.3 "Covered Code" means the Original Code or Modifications or the combination
-of the Original Code and Modifications, in each case including portions
-thereof.
+    1.3	By virtue of this Agreement, Licensee acquires only the non-exclusive right to use the Product and does not acquire any rights of ownership (i) in the Product, or (ii) any Documentation provided therewith. C24 and/or its licensors shall at all times retain all right, title, and interest in the Product and the Documentation provided therewith.  Except for the license rights expressly granted herein, this Agreement grants no additional express or implied license, right or interest in the Product or in any copyright, patent, trade secret, trademark, invention or other intellectual property rights of C24, its affiliates or their licensors. C24 reserves all rights not expressly granted to Licensee in this Agreement.    
 
-1.4 "Electronic Distribution Mechanism" means a mechanism generally accepted in
-the software development community for the electronic transfer of data.
+2.  License Restrictions  
 
-1.5 "Executable" means Covered Code in any form other than Source Code.
+    2.1	Use by Licensee shall be in accordance with the provisions of and limitations set forth in this Agreement, and the additional terms, if any, set forth in any (i) C24 Software Services Agreement and associated Order Forms, or (ii) additional license and maintenance agreements executed by C24 and Licensee in connection with this Agreement which specifically states the terms thereof shall be in addition to or in lieu of any of the terms set forth herein (a 'Software Services Agreement Addendum'). 
 
-1.6 "Initial Developer" means the individual or entity identified as the Initial
-Developer in the Source Code notice required by Exhibit A.
+    2.2	The Licensee shall not disassemble, reverse engineer, decompile, modify or create derivative works of the Product and the Documentation.
 
-1.7 "Larger Work" means a work which combines Covered Code or portions thereof
-with code not governed by the terms of this License.
+    2.3	Except as specifically permitted by applicable Software Services Agreement Addendum(s) the Licensee shall not (i) sublicense, distribute, sell, rent, encumber, outsource, lease or grant any other rights in the Product and the Documentation or otherwise allow the Product to be accessed, used or possessed by another party including without limitation, direct or indirect use via thin-client or web-based remote access software which but for the use thereof would have required a copy of the Product to be installed or used locally by that user, or (ii) provide information, data processing, subscription, hosting or other commercial services to another party via time sharing or facility management services or to act as or operate a service bureau. 
 
-1.8 "License" means this document.
+    2.4	The Product, including technical data, are subject to U.S. export control laws, including, without limitation, the U.S. Export Administration Act and its associated regulations, and may be subject to export or import regulations in other countries.  Licensee shall not directly or indirectly export or re-export the Product, or any direct product thereof, without first obtaining C24's written approval.  Licensee agrees to comply strictly with all regulations and acknowledges that it has the responsibility to obtain licenses to export, re-export or import the Product.  The Product may not be downloaded, or otherwise exported or re-exported (i) into, or to a national or resident of any country to which the U.S. has embargoed goods; or (ii) to anyone on the U.S. Treasury Department's list of Specially Designated Nationals, the U.S. Commerce Department's Table of Denial Orders as amended from time to time, or any other list distributed by the United States government setting forth individuals or entities to which distribution of the Product would be prohibited by United States law.
 
-1.8.1 "Licensable" means having the right to grant, to the maximum extent
-possible, whether at the time of the initial grant or subsequently acquired, any
-and all of the rights conveyed herein.
-
-1.9 "Modifications" means any addition to or deletion from the substance or
-structure of either the Original Code or any previous Modifications. When
-Covered Code is released as a series of files, a Modification is:
-
-A. Any addition to or deletion from the contents of a file containing Original
-Code or previous Modifications.
-
-B. Any new file that contains any part of the Original Code or previous
-Modifications.
-
-1.10 "Original Code" means Source Code of computer software code which is
-described in the Source Code notice required by Exhibit A as Original Code, and
-which, at the time of its release under this License is not already Covered Code
-governed by this License.
-
-1.10.1 "Patent Claims" means any patent claim(s), now owned or hereafter
-acquired, including without limitation, method, process, and apparatus claims,
-in any patent Licensable by grantor.
-
-1.11 "Source Code" means the preferred form of the Covered Code for making
-modifications to it, including all modules it contains, plus any associated
-interface definition files, scripts used to control compilation and installation
-of an Executable, or source code differential comparisons against either the
-Original Code or another well known, available Covered Code of the Contributor's
-choice. The Source Code can be in a compressed or archival form, provided the
-appropriate decompression or de-archiving software is widely available for no
-charge.
-
-1.12 "You" (or "Your") means an individual or a legal entity exercising
-rights under, and complying with all of the terms of, this License or a future
-version of this License issued under Section 6.1. For legal entities, "You"
-includes any entity which controls, is controlled by, or is under common control
-with You. For purposes of this definition, "control" means (a) the power, direct
-or indirect, to cause the direction or management of such entity, whether by
-contract or otherwise, or (b) ownership of more than fifty percent (50%) of the
-outstanding shares or beneficial ownership of such entity.
-
-2. Source Code License.
-
-2.1 The Initial Developer Grant.
-The Initial Developer hereby grants You a world-wide, royalty-free,
-non-exclusive license, subject to third party intellectual property claims:
-
-(a) under intellectual property rights (other than patent or trademark)
-Licensable by Initial Developer to use, reproduce, modify, display, perform,
-sublicense and distribute the Original Code (or portions thereof) with or
-without Modifications, and/or as part of a Larger Work; and
-
-(b) under Patents Claims infringed by the making, using or selling of
-Original Code, to make, have made, use, practice, sell, and offer for sale,
-and/or otherwise dispose of the Original Code (or portions thereof).
-
-(c) the licenses granted in this Section 2.1(a) and (b) are effective on the
-date Initial Developer first distributes Original Code under the terms of this
-License.
-
-(d) Notwithstanding Section 2.1(b) above, no patent license is granted: 1)
-for code that You delete from the Original Code; 2) separate from the Original
-Code; or 3) for infringements caused by: i) the modification of the Original
-Code or ii) the combination of the Original Code with other software or
-devices.
-
-2.2 Contributor Grant.
-
-Subject to third party intellectual property claims, each Contributor hereby
-grants You a world-wide, royalty-free, non-exclusive license
-
-(a) under intellectual property rights (other than patent or trademark)
-Licensable by Contributor, to use, reproduce, modify, display, perform,
-sublicense and distribute the Modifications created by such Contributor (or
-portions thereof) either on an unmodified basis, with other Modifications, as
-Covered Code and/or as part of a Larger Work; and
-
-(b) under Patent Claims infringed by the making, using, or selling of
-Modifications made by that Contributor either alone and/or in combination with
-its Contributor Version (or portions of such combination), to make, use, sell,
-offer for sale, have made, and/or otherwise dispose of: 1) Modifications made
-by that Contributor (or portions thereof); and 2) the combination of
-Modifications made by that Contributor with its Contributor Version (or portions
-of such combination).
-
-(c) the licenses granted in Sections 2.2(a) and 2.2(b) are effective on the
-date Contributor first makes Commercial Use of the Covered Code.
-
-(d) Notwithstanding Section 2.2(b) above, no patent license is granted: 1)
-for any code that Contributor has deleted from the Contributor Version; 2)
-separate from the Contributor Version; 3) for infringements caused by: i) third
-party modifications of Contributor Version or ii) the combination of
-Modifications made by that Contributor with other software (except as part of
-the Contributor Version) or other devices; or 4) under Patent Claims infringed
-by Covered Code in the absence of Modifications made by that Contributor.
-
-3. Distribution Obligations.
-
-3.1 Application of License.
-The Modifications which You create or to which You contribute are governed by
-the terms of this License, including without limitation Section 2.2. The Source
-Code version of Covered Code may be distributed only under the terms of this
-License or a future version of this License released under Section 6.1, and You
-must include a copy of this License with every copy of the Source Code You
-distribute. You may not offer or impose any terms on any Source Code version
-that alters or restricts the applicable version of this License or the
-recipients' rights hereunder. However, You may include an additional document
-offering the additional rights described in Section 3.5.
-
-3.2 Availability of Source Code.
-Any Modification which You create or to which You contribute must be made
-available in Source Code form under the terms of this License either on the same
-media as an Executable version or via an accepted Electronic Distribution
-Mechanism to anyone to whom you made an Executable version available; and if
-made available via Electronic Distribution Mechanism, must remain available for
-at least twelve (12) months after the date it initially became available, or at
-least six (6) months after a subsequent version of that particular Modification
-has been made available to such recipients. You are responsible for ensuring
-that the Source Code version remains available even if the Electronic
-Distribution Mechanism is maintained by a third party.
-
-3.3 Description of Modifications.
-You must cause all Covered Code to which You contribute to contain a file
-documenting the changes You made to create that Covered Code and the date of any
-change. You must include a prominent statement that the Modification is
-derived, directly or indirectly, from Original Code provided by the Initial
-Developer and including the name of the Initial Developer in (a) the Source
-Code, and (b) in any notice in an Executable version or related documentation in
-which You describe the origin or ownership of the Covered Code.
-
-3.4 Intellectual Property Matters
-
-(a) Third Party Claims.
-If Contributor has knowledge that a license under a third party's intellectual
-property rights is required to exercise the rights granted by such Contributor
-under Sections 2.1 or 2.2, Contributor must include a text file with the Source
-Code distribution titled "LEGAL" which describes the claim and the party making
-the claim in sufficient detail that a recipient will know whom to contact. If
-Contributor obtains such knowledge after the Modification is made available as
-described in Section 3.2, Contributor shall promptly modify the LEGAL file in
-all copies Contributor makes available thereafter and shall take other steps
-(such as notifying appropriate mailing lists or newsgroups) reasonably
-calculated to inform those who received the Covered Code that new knowledge has
-been obtained.
-
-(b) Contributor APIs.
-If Contributor's Modifications include an application programming interface and
-Contributor has knowledge of patent licenses which are reasonably necessary to
-implement that API, Contributor must also include this information in the LEGAL
-file.
-
-(c) Representations.
-Contributor represents that, except as disclosed pursuant to Section 3.4(a)
-above, Contributor believes that Contributor's Modifications are Contributor's
-original creation(s) and/or Contributor has sufficient rights to grant the
-rights conveyed by this License.
-
-3.5 Required Notices.
-You must duplicate the notice in Exhibit A in each file of the Source Code. If
-it is not possible to put such notice in a particular Source Code file due to
-its structure, then You must include such notice in a location (such as a
-relevant directory) where a user would be likely to look for such a notice. If
-You created one or more Modification(s) You may add your name as a Contributor
-to the notice described in Exhibit A. You must also duplicate this License in
-any documentation for the Source Code where You describe recipients' rights or
-ownership rights relating to Covered Code. You may choose to offer, and to
-charge a fee for, warranty, support, indemnity or liability obligations to one
-or more recipients of Covered Code. However, You may do so only on Your own
-behalf, and not on behalf of the Initial Developer or any Contributor. You must
-make it absolutely clear than any such warranty, support, indemnity or liability
-obligation is offered by You alone, and You hereby agree to indemnify the
-Initial Developer and every Contributor for any liability incurred by the
-Initial Developer or such Contributor as a result of warranty, support,
-indemnity or liability terms You offer.
-
-3.6 Distribution of Executable Versions.
-You may distribute Covered Code in Executable form only if the requirements of
-Section 3.1-3.5 have been met for that Covered Code, and if You include a notice
-stating that the Source Code version of the Covered Code is available under the
-terms of this License, including a description of how and where You have
-fulfilled the obligations of Section 3.2. The notice must be conspicuously
-included in any notice in an Executable version, related documentation or
-collateral in which You describe recipients' rights relating to the Covered
-Code. You may distribute the Executable version of Covered Code or ownership
-rights under a license of Your choice, which may contain terms different from
-this License, provided that You are in compliance with the terms of this License
-and that the license for the Executable version does not attempt to limit or
-alter the recipient's rights in the Source Code version from the rights set
-forth in this License. If You distribute the Executable version under a
-different license You must make it absolutely clear that any terms which differ
-from this License are offered by You alone, not by the Initial Developer,
-Original Developer or any Contributor. You hereby agree to indemnify the
-Initial Developer, Original Developer and every Contributor for any liability
-incurred by the Initial Developer, Original Developer or such Contributor as a
-result of any such terms You offer.
-
-3.7 Larger Works.
-You may create a Larger Work by combining Covered Code with other code not
-governed by the terms of this License and distribute the Larger Work as a single
-product. In such a case, You must make sure the requirements of this License are
-fulfilled for the Covered Code.
-
-4. Inability to Comply Due to Statute or Regulation.
-If it is impossible for You to comply with any of the terms of this License with
-respect to some or all of the Covered Code due to statute, judicial order, or
-regulation then You must: (a) comply with the terms of this License to the
-maximum extent possible; and (b) describe the limitations and the code they
-affect. Such description must be included in the LEGAL file described in
-Section 3.4 and must be included with all distributions of the Source Code.
-Except to the extent prohibited by statute or regulation, such description must
-be sufficiently detailed for a recipient of ordinary skill to be able to
-understand it.
-
-5. Application of this License.
-This License applies to code to which the Initial Developer has attached the
-notice in Exhibit A and to related Covered Code.
-
-6. Versions of the License.
-
-6.1 New Versions.
-MuleSoft, Inc. ("MuleSoft") may publish revised and/or new versions of the
-License from time to time. Each version will be given a distinguishing version
-number.
-
-6.2 Effect of New Versions.
-Once Covered Code has been published under a particular version of the License,
-You may always continue to use it under the terms of that version. You may also
-choose to use such Covered Code under the terms of any subsequent version of the
-License published by MuleSoft. No one other than MuleSoft has the right to
-modify the terms applicable to Covered Code created under this License.
-
-6.3 Derivative Works.
-If You create or use a modified version of this License (which you may only do
-in order to apply it to code which is not already Covered Code governed by this
-License), You must (a) rename Your license so that the phrases "MuleSoft",
-"CPAL" or any confusingly similar phrase do not appear in your license (except
-to note that your license differs from this License) and (b) otherwise make it
-clear that Your version of the license contains terms which differ from the
-CPAL. (Filling in the name of the Initial Developer, Original Developer,
-Original Code or Contributor in the notice described in Exhibit A shall not of
-themselves be deemed to be modifications of this License.)
-
-7. DISCLAIMER OF WARRANTY.
-COVERED CODE IS PROVIDED UNDER THIS LICENSE ON AN "AS IS" BASIS, WITHOUT
-WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, WITHOUT
-LIMITATION, WARRANTIES THAT THE COVERED CODE IS FREE OF DEFECTS, MERCHANTABLE,
-FIT FOR A PARTICULAR PURPOSE OR NON-INFRINGING. THE ENTIRE RISK AS TO THE
-QUALITY AND PERFORMANCE OF THE COVERED CODE IS WITH YOU. SHOULD ANY COVERED CODE
-PROVE DEFECTIVE IN ANY RESPECT, YOU (NOT THE INITIAL DEVELOPER, ORIGINAL
-DEVELOPER OR ANY OTHER CONTRIBUTOR) ASSUME THE COST OF ANY NECESSARY SERVICING,
-REPAIR OR CORRECTION. THIS DISCLAIMER OF WARRANTY CONSTITUTES AN ESSENTIAL PART
-OF THIS LICENSE. NO USE OF ANY COVERED CODE IS AUTHORIZED HEREUNDER EXCEPT UNDER
-THIS DISCLAIMER.
-
-8. TERMINATION.
-
-8.1 This License and the rights granted hereunder will terminate automatically
-if You fail to comply with terms herein and fail to cure such breach within 30
-days of becoming aware of the breach. All sublicenses to the Covered Code which
-are properly granted shall survive any termination of this License. Provisions
-which, by their nature, must remain in effect beyond the termination of this
-License shall survive.
-
-8.2 If You initiate litigation by asserting a patent infringement claim
-(excluding declatory judgment actions) against Initial Developer, Original
-Developer or a Contributor (the Initial Developer, Original Developer or
-Contributor against whom You file such action is referred to as "Participant")
-alleging that:
-
-(a) such Participant's Contributor Version directly or indirectly infringes
-any patent, then any and all rights granted by such Participant to You under
-Sections 2.1 and/or 2.2 of this License shall, upon 60 days notice from
-Participant terminate prospectively, unless if within 60 days after receipt of
-notice You either: (i) agree in writing to pay Participant a mutually agreeable
-reasonable royalty for Your past and future use of Modifications made by such
-Participant, or (ii) withdraw Your litigation claim with respect to the
-Contributor Version against such Participant. If within 60 days of notice, a
-reasonable royalty and payment arrangement are not mutually agreed upon in
-writing by the parties or the litigation claim is not withdrawn, the rights
-granted by Participant to You under Sections 2.1 and/or 2.2 automatically
-terminate at the expiration of the 60 day notice period specified above.
-
-(b) any software, hardware, or device, other than such Participant's
-Contributor Version, directly or indirectly infringes any patent, then any
-rights granted to You by such Participant under Sections 2.1(b) and 2.2(b) are
-revoked effective as of the date You first made, used, sold, distributed, or had
-made, Modifications made by that Participant.
-
-8.3 If You assert a patent infringement claim against Participant alleging that
-such Participant's Contributor Version directly or indirectly infringes any
-patent where such claim is resolved (such as by license or settlement) prior to
-the initiation of patent infringement litigation, then the reasonable value of
-the licenses granted by such Participant under Sections 2.1 or 2.2 shall be
-taken into account in determining the amount or value of any payment or
-license.
-
-8.4 In the event of termination under Sections 8.1 or 8.2 above, all end user
-license agreements (excluding distributors and resellers) which have been
-validly granted by You or any distributor hereunder prior to termination shall
-survive termination.
-
-9. LIMITATION OF LIABILITY.
-UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY, WHETHER TORT (INCLUDING
-NEGLIGENCE), CONTRACT, OR OTHERWISE, SHALL YOU, THE INITIAL DEVELOPER, ORIGINAL
-DEVELOPER, ANY OTHER CONTRIBUTOR, OR ANY DISTRIBUTOR OF COVERED CODE, OR ANY
-SUPPLIER OF ANY OF SUCH PARTIES, BE LIABLE TO ANY PERSON FOR ANY INDIRECT,
-SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES OF ANY CHARACTER INCLUDING,
-WITHOUT LIMITATION, DAMAGES FOR LOSS OF GOODWILL, WORK STOPPAGE, COMPUTER
-FAILURE OR MALFUNCTION, OR ANY AND ALL OTHER COMMERCIAL DAMAGES OR LOSSES, EVEN
-IF SUCH PARTY SHALL HAVE BEEN INFORMED OF THE POSSIBILITY OF SUCH DAMAGES. THIS
-LIMITATION OF LIABILITY SHALL NOT APPLY TO LIABILITY FOR DEATH OR PERSONAL
-INJURY RESULTING FROM SUCH PARTY'S NEGLIGENCE TO THE EXTENT APPLICABLE LAW
-PROHIBITS SUCH LIMITATION. SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OR
-LIMITATION OF INCIDENTAL OR CONSEQUENTIAL DAMAGES, SO THIS EXCLUSION AND
-LIMITATION MAY NOT APPLY TO YOU.
-
-10. U.S. GOVERNMENT END USERS.
-The Covered Code is a "commercial item," as that term is defined in 48 C.F.R.
-2.101 (Oct. 1995), consisting of "commercial computer software" and "commercial
-computer software documentation," as such terms are used in 48 C.F.R. 12.212
-(Sept. 1995). Consistent with 48 C.F.R. 12.212 and 48 C.F.R. 227.7202-1 through
-227.7202-4 (June 1995), all U.S. Government End Users acquire Covered Code with
-only those rights set forth herein.
-
-11. MISCELLANEOUS.
-This License represents the complete agreement concerning subject matter hereof.
-If any provision of this License is held to be unenforceable, such provision
-shall be reformed only to the extent necessary to make it enforceable. This
-License shall be governed by California law provisions (except to the extent
-applicable law, if any, provides otherwise), excluding its conflict-of-law
-provisions. With respect to disputes in which at least one party is a citizen
-of, or an entity chartered or registered to do business in the United States of
-America, any litigation relating to this License shall be subject to the
-jurisdiction of the Federal Courts of the Northern District of California, with
-venue lying in Santa Clara County, California, with the losing party responsible
-for costs, including without limitation, court costs and reasonable attorneys'
-fees and expenses. The application of the United Nations Convention on Contracts
-for the International Sale of Goods is expressly excluded. Any law or
-regulation which provides that the language of a contract shall be construed
-against the drafter shall not apply to this License.
-
-12. RESPONSIBILITY FOR CLAIMS.
-As between Initial Developer, Original Developer and the Contributors, each
-party is responsible for claims and damages arising, directly or indirectly, out
-of its utilization of rights under this License and You agree to work with
-Initial Developer, Original Developer and Contributors to distribute such
-responsibility on an equitable basis. Nothing herein is intended or shall be
-deemed to constitute any admission of liability.
-
-13. MULTIPLE-LICENSED CODE.
-Initial Developer may designate portions of the Covered Code as
-Multiple-Licensed. Multiple-Licensed means that the Initial Developer permits
-you to utilize portions of the Covered Code under Your choice of the CPAL or the
-alternative licenses, if any, specified by the Initial Developer in the file
-described in Exhibit A.
-
-14. ADDITIONAL TERM: ATTRIBUTION
-
-(a) As a modest attribution to the organizer of the development of the
-Original Code ("Original Developer"), in the hope that its promotional value may
-help justify the time, money and effort invested in writing the Original Code,
-the Original Developer may include in Exhibit B ("Attribution Information") a
-requirement that each time an Executable and Source Code or a Larger Work is
-launched or initially run (which includes initiating a session), a prominent
-display of the Original Developer's Attribution Information (as defined below)
-must occur on the graphic user interface employed by the end user to access such
-Covered Code (which may include display on a splash screen), if any. The size
-of the graphic image should be consistent with the size of the other elements of
-the Attribution Information. If the access by the end user to the Executable and
-Source Code does not create a graphic user interface for access to the Covered
-Code, this obligation shall not apply. If the Original Code displays such
-Attribution Information in a particular form (such as in the form of a splash
-screen, notice at login, an "about" display, or dedicated attribution area on
-user interface screens), continued use of such form for that Attribution
-Information is one way of meeting this requirement for notice.
-
-(b) Attribution information may only include a copyright notice, a brief
-phrase, graphic image and a URL ("Attribution Information") and is subject to
-the Attribution Limits as defined below. For these purposes, prominent shall
-mean display for sufficient duration to give reasonable notice to the user of
-the identity of the Original Developer and that if You include Attribution
-Information or similar information for other parties, You must ensure that the
-Attribution Information for the Original Developer shall be no less prominent
-than such Attribution Information or similar information for the other party.
-For greater certainty, the Original Developer may choose to specify in Exhibit B
-below that the above attribution requirement only applies to an Executable and
-Source Code resulting from the Original Code or any Modification, but not a
-Larger Work. The intent is to provide for reasonably modest attribution,
-therefore the Original Developer cannot require that You display, at any time,
-more than the following information as Attribution Information: (a) a copyright
-notice including the name of the Original Developer; (b) a word or one phrase
-(not exceeding 10 words); (c) one graphic image provided by the Original
-Developer; and (d) a URL (collectively, the "Attribution Limits").
-
-(c) If Exhibit B does not include any Attribution Information, then there
-are no requirements for You to display any Attribution Information of the
-Original Developer.
-
-(d) You acknowledge that all trademarks, service marks and/or trade names
-contained within the Attribution Information distributed with the Covered Code
-are the exclusive property of their owners and may only be used with the
-permission of their owners, or under circumstances otherwise permitted by law or
-as expressly set out in this License.
-
-15. ADDITIONAL TERM: NETWORK USE.
-The term "External Deployment" means the use, distribution, or communication of
-the Original Code or Modifications in any way such that the Original Code or
-Modifications may be used by anyone other than You, whether those works are
-distributed or communicated to those persons or made available as an application
-intended for use over a network. As an express condition for the grants of
-license hereunder, You must treat any External Deployment by You of the Original
-Code or Modifications as a distribution under section 3.1 and make Source Code
-available under Section 3.2.
-
-
-EXHIBIT A. Common Public Attribution License Version 1.0.
-"The contents of this file are subject to the Common Public Attribution License
-Version 1.0 (the "License"); you may not use this file except in compliance with
-the License. You may obtain a copy of the License at
-http://www.MuleSoft.com/CPAL/. The License is based on the Mozilla Public
-License Version 1.1 but Sections 14 and 15 have been added to cover use of
-software over a computer network and provide for limited attribution for the
-Original Developer. In addition, Exhibit A has been modified to be consistent
-with Exhibit B.
-Software distributed under the License is distributed on an "AS IS" basis,
-WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the
-specific language governing rights and limitations under the License.
-The Original Code is MuleSoft Mule
-The Initial Developer of the Original Code is MuleSoft Inc. All portions of
-the code are Copyright (c) 2003-2009 MuleSoft Inc. All Rights Reserved.
-
-EXHIBIT B. Attribution Information
-Subject to the limitations and other requirements in Section 14 of the License,
-the Original Developer requires You to display the following Attribution
-Information:
-
-Attribution Copyright Notice: Copyright (c) 2003-2009 MuleSoft Inc.
-Attribution Phrase (not exceeding 10 words): Powered by Mule. MuleSoft is Open
-for Integration.
-Attribution URL: http://www.MuleSoft.com
-Graphic Image provided in the Covered Code as file:
-http://www.MuleSoft.com/images/mulesoft-logo.gif
-
-
-Redistributions of the Covered Code in binary form or source code form, must
-ensure that the first time the resulting executable program is launched, a user
-interface, if any, shall include the attribution information set forth below
-prominently. If the executable program does not launch a user interface, the
-Company name and URL shall be included in the notice section of each file of the
-Covered Code. :
-
-Display of Attribution Information is required in Larger Works which are defined
-in the CPAL as a work which combines Covered Code or portions thereof with code
-not governed by the terms of the CPAL.
+    2.5	Licensee shall be solely responsible for identifying and complying with all laws of any jurisdiction outside of the United States regarding the use of the Product and any technical data supplied by C24.  Licensee agrees to obtain all licenses, permits or approvals required by any government at Licensee's sole cost and expense.  Licensee's obligations under this Section 2.4 shall survive termination for any reason whatsoever. 
 
+    2.6	If the Product is being acquired by or on behalf of the U.S. Government or by a U.S. Government prime contractor or subcontractor (at any tier), then the U.S. Government's rights in the Product will be only as set forth herein.  The Product and related Documentation is a "commercial item" as that term is defined at 48 C.F.R. 2.101, consisting of "commercial computer software" and "commercial computer software Documentation" as such terms are used in 48 C.F.R. 12.212. Consistent with 48 C.F.R. 12.212 and 48 C.F.R. 227.7202-1 through 227.7202-4, all U.S. Government end users acquire the Product and such Documentation with only those rights set forth herein. Contract/Manufacturer is C24 TECHNOLOGIES LIMITED, Alpha House, 100 Borough High Street, London SE1 1LB, United Kingdom.
+
+
+3.   Limited Warranty 
+
+    3.1	C24 warrants that, for a period of ninety (90) days from the date of the initial availability for download from a C24 site of the Product, (the 'Warranty Period'), the Product will conform in all material respects to the Documentation for the Product found at the C24 Resource Center at www.c24.biz. As the sole and exclusive remedy for any failure of the Product to materially conform to the Documentation, C24 shall repair, replace, or correct the Product if such failure is reported during the Warranty Period or, if C24, at its discretion, reasonably determines that such remedy is not economically or technically feasible, this Agreement and the licenses granted hereunder will terminate and C24 or its supplier (as applicable) shall provide a full refund of the license fee paid, if any, with respect to the particular Product. The above warranty does not cover Updates, any Product provided on an evaluation basis, or defects to the Product due to accident, abuse, service, alteration, modification or improper installation or configuration by Licensee, its personnel or any third party.  
+
+    3.2	C24 does not warrant that the functions of the Product will meet Licensee's requirements or that operation of the Product will be uninterrupted or error free. Licensee assumes responsibility for selecting the Product to achieve its intended results and for the use and results obtained from the Product. 
+
+    3.3	THE LIMITED WARRANTY SPECIFIED IN SECTION 3.1 SETS FORTH ALL WARRANTIES AND REPRESENTATIONS PROVIDED TO LICENSEE WITH RESPECT TO THE PRODUCT AND SUCH LIMITED WARRANTY IS PROVIDED SOLELY BY C24 AND NOT ITS LICENSORS. EXCEPT FOR THE LIMITED WARRANTY PROVIDED SOLELY BY C24 TO LICENSEE PURSUANT TO SECTION 3.1, NEITHER C24 NOR ITS LICENSORS, NOR ANY OF THEIR RESPECTIVE SUPPLIERS, MAKE ANY OTHER EXPRESS WARRANTIES OR REPRESENTATIONS RELATING TO THE PRODUCT AND FURTHER, TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, DISCLAIM ALL IMPLIED WARRANTIES AND REPRESENTATIONS INCLUDING, BUT NOT LIMITED TO, ALL IMPLIED WARRANTIES AND REPRESENTATIONS OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT WITH RESPECT TO THE PRODUCT. Further, the Product is not fault tolerant and is not designed, manufactured or intended for use in hazardous environments requiring fail-safe performance (including, without limitation, the design, construction, operation or maintenance of any nuclear facility; direct life support machines; weapon systems; or control of aircraft, air traffic, aircraft navigation or aircraft communications), in which the failure of the Product could lead directly or indirectly to death, personal injury or severe physical or environmental damage. Without limiting the scope of the disclaimers set forth herein, C24 for itself and on behalf of its licensors and their respective suppliers, disclaims any express or implied warranty of fitness for any such high risk uses. 
+
+4.  Indemnity
+
+    4.1	C24 will defend, indemnify and hold Licensee harmless against any and all costs and reasonable expenses finally awarded by a court or agreed to in settlement which directly result from any third party claim based on an allegation that a Product infringes either a valid (a) United States patent or (b)
+copyright of a country that is a party to the Agreement for Trade Related Aspects of Intellectual Property Rights ('TRIPS') but only if C24 is notified promptly in writing of such claim and given sole control of the defense of any such claim and all negotiations for its settlement or compromise. Licensee agrees to reasonably cooperate with C24 in the defense, settlement or compromise of any such claim. In the event that a final injunction is obtained against Licensee's use of the Product, if C24 reasonably believes that Licensee's use of the Products could be so enjoined, or if in C24's opinion the Product is likely to become the subject of a successful claim of such infringement, C24 shall, at its option and expense, (i) procure for Licensee the right to continue using the Product as provided in this Agreement, (ii) modify or require replacement of the Product that Licensee is then currently using so that the Product becomes non-infringing (so long as the functionality of the Products is substantially similar) or, in the event neither of the previous two options are commercially reasonable for C24, (iii) terminate
+this Agreement and the rights granted hereunder and refund to Licensee the amount paid to C24 for the Product less an amount for depreciation determined on a straight-line five year depreciation basis with a commencement date as of the respective shipment date of the applicable copies of the Product.  Notwithstanding the foregoing, C24 shall have no liability for a claim to the extent based on (A) the use by Licensee of the Product more than thirty (30) days after C24 has notified Licensee of (i), (ii) or (iii), above or (B) the version of the Product used by Licensee is not the current release version of the Product.  
+
+    4.2	Notwithstanding the foregoing, C24 shall have no liability to Licensee under this Section 4 to the extent that any infringement or claim thereof is based upon (i) the combination, operation or use of a Product in combination with equipment or software not supplied by C24 hereunder where the Product would itself not be infringing, (ii) Licensee's non-compliance with designs, specifications or instructions provided by C24 to Licensee, (iii) use of a Product in an application or environment for which it was not designed or not contemplated under this Agreement or the Documentation, (iv) modifications of a Product by anyone other than C24 where the unmodified version of the Product would not be infringing, or (v) use by users or affiliated parties of Licensee not permitted by this Agreement. 
+
+    4.3	THE FOREGOING INDEMNIFICATION PROVISIONS STATE THE ENTIRE LIABILITY OF C24 AND THE SOLE AND EXCLUSIVE REMEDY OF LICENSEE WITH RESPECT TO ANY INFRINGEMENT OR ALLEGED INFRINGEMENT BY C24 OF ANY INTELLECTUAL PROPERTY RIGHTS OR PROPRIETARY RIGHTS IN RESPECT OF THE PRODUCT OR ITS USE.
+
+    4.4	If the Licensee is specifically subject to a Software Services Agreement Addendum as per Section 2 hereof, the terms of the License Addendum will prevail over section 4 hereof.
+
+
+5.	Confidentiality; Notices
+
+    5.1	Licensee acknowledges that the Products, including all source and/or object code and all parts and aspects thereof, and any modifications, enhancements, translations, localizations, or other derivative works thereof, in whatever form, whether or not marked as confidential, the Documentation and any other documentation or materials provided with or related to the Product (collectively, the 'Confidential Information'), are the valuable proprietary and trade secret information of C24 and/or its licensors and suppliers.  Licensee shall (i) limit use and disclosure of the Confidential Information to its employees and its consultants who are authorized pursuant to this Agreement to use the Products and who agree to be bound by the terms of this Agreement or are otherwise bound to a confidentiality agreement containing substantially similar terms; (ii) not provide or disclose any of the Confidential Information to another party; and (iii) treat the Confidential Information with the same degree of care to avoid disclosure to any third party as is used with respect to Licensee's information of like importance which is to be kept secret, but with no less than reasonable care.  The foregoing obligations shall be in addition to any obligations set forth in any separate confidentiality agreement between C24 and Licensee.   
+
+    5.2	Licensee agrees, under penalty of license termination but not exclusive of any other remedies, not to cause or permit the copying of the Product for any purpose other than expressly set forth herein.  Licensee may copy the Product for archival, off-line backup, disaster recovery or replication purposes.  Licensee may copy the Documentation solely for the purpose of facilitating Licensee's use of the Product in accordance with, and subject to, the terms and conditions of this Agreement. Licensee agrees not to remove and product identification, copyright notices, or other notices or proprietary restrictions from the Product. 
+
+    5.3	Benchmark results for the Product may not be disclosed or published without the written consent of C24. 
+
+    5.4	Licensee acknowledges that in the event of a breach or threat of breach of this Section 5, money damages will not be adequate.  Therefore, in addition to any other legal or equitable remedies, C24 shall be entitled to injunctive or similar equitable relief against such breach or threat of breach.
+
+
+6.  Limitation of Liability
+
+    TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE LIABILITY OF C24, IF ANY, FOR DAMAGES RELATING TO ANY PRODUCT SHALL BE LIMITED TO THE ACTUAL AMOUNTS PAID BY LICENSEE FOR SUCH PRODUCT. C24'S LICENSORS AND THEIR SUPPLIERS SHALL HAVE NO LIABILITY TO LICENSEE FOR ANY DAMAGES SUFFERED BY LICENSEE OR ANY THIRD PARTY AS A RESULT OF USING THE PRODUCT, OR ANY PORTION THEREOF. NOTWITHSTANDING THE FOREGOING, IN NO EVENT SHALL C24, ITS LICENSORS, OR ANY OF THEIR RESPECTIVE SUPPLIERS BE LIABLE FOR ANY LOST REVENUE, PROFIT OR DATA, OR FOR INDIRECT, PUNITIVE, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES OF ANY CHARACTER, INCLUDING, WITHOUT LIMITATION, ANY COMMERCIAL DAMAGES OR LOSSES, HOWEVER CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OR INABILITY TO USE THE PRODUCT, OR ANY PORTION THEREOF, EVEN IF C24, ITS LICENSORS AND/OR ANY OF THEIR RESPECTIVE SUPPLIERS HAVE BEEN INFORMED OF THE POSSIBILITY OF SUCH DAMAGES. EACH EXCLUSION OR LIMITATION IS INTENDED TO BE A SEPARATE AND THEREFORE SEVERABLE EXCLUSION.
+
+
+7.   Miscellaneous
+
+    7.1 Third party terms and restrictions: The Product may contain or be accompanied by certain non-proprietary components created and separately licensed to Licensee by third parties. These components, if any, are identified in, and subject to, special license terms and conditions set forth in the 'notices.txt' file accompanying the Product ('Special Notices'). The Special Notices include important licensing and warranty information and disclaimers.  In the event of conflict between the Special Notices and the other portions of this Agreement, the Special Notices will take precedence (but solely with respect to the non-proprietary third party component(s) to which the Special Notice relates). 
+
+    7.2 If C24 offers maintenance services for the Product, and if Licensee orders and pays for such maintenance services, such maintenance services shall be provided in accordance with the maintenance plan set forth in any executed Software Services Agreement Addendum.
+
+    7.3	THIS AGREEMENT, INCLUDING ANY EXHIBITS AND ANY SOFTWARE SERVICES AGREEMENT ADDENDUM(S), CONSTITUTES THE COMPLETE AGREEMENT BETWEEN THE PARTIES WITH RESPECT TO THE PRODUCT AND SUPERCEDES ANY OTHER AGREEMENT, PROPOSAL, COMMUNICATION OR ADVERTISING, ORAL OR WRITTEN, SIGNED OR UNSIGNED, WITH RESPECT TO THE PRODUCT.  
+
+    7.4	This Agreement has been drawn up in English at the express wish of the parties.  Le prÈsent contrat a ÈtÈ rÈdigÈ en anglais a la demande expresse des parties.  
+
+    7.5	Except as otherwise expressly set forth herein, this Agreement is governed by the laws of England and Wales, without regard to its choice of law principles, and without regard to the provisions of any state Uniform Computer Information Transactions Act or similar federal, state, local or foreign laws,
+regulations or conventions. 
+
+    7.6	This Agreement may not be modified or amended except in a writing executed by both C24 and Licensee. 
+
+    7.7	Failure or delay on the part of C24 to exercise any right, power, privilege or remedy hereunder shall not constitute a waiver thereof.  A waiver of default shall not operate as a waiver of any other default or of the same type of default on future occasions. 
+
+    7.8	The parties expressly disclaim the application of the United Nations Convention on Contracts for the International Sale of Goods.  
+
+
+C24 Integration Objects End User License Agreement (C24-iO EULA)
+Revision: 25th Feb 2013
