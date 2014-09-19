@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -18,10 +19,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mule.api.MuleEvent;
 import org.mule.api.annotations.Configurable;
+import org.mule.api.annotations.MetaDataKeyRetriever;
+import org.mule.api.annotations.MetaDataRetriever;
 import org.mule.api.annotations.MetaDataSwitch;
 import org.mule.api.annotations.Module;
 import org.mule.api.annotations.Processor;
 import org.mule.api.annotations.param.Default;
+import org.mule.api.annotations.param.MetaDataKeyParam;
 import org.mule.api.annotations.param.Optional;
 import org.mule.common.DefaultResult;
 import org.mule.common.Result;
@@ -174,7 +178,7 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
      */
     @Processor
     @Inject
-    public String transform(String transform,
+    public String transform(@MetaDataKeyParam String transform,
                             @Optional @Default("#[payload]") Object source, 
                             @Optional @Default("") String encoding,
                             @Optional @Default("true") boolean validateInput,
@@ -250,7 +254,10 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
 
                         debug("build config");
                         
-                        builder.setUrls(ClasspathHelper.forJavaClassPath())
+                        Collection<URL> urls = ClasspathHelper.forJavaClassPath();
+                        urls.addAll(ClasspathHelper.forClassLoader());
+                        
+                        builder.setUrls(urls)
                                .setScanners(new SubTypesScanner());
                         
                         r = new Reflections(builder);
@@ -265,6 +272,7 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
         
     }
     
+    @MetaDataKeyRetriever
     @Override
     public Result<List<MetaDataKey>> getMetaDataKeys() {
         try {
@@ -284,6 +292,7 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
         
     }
     
+    @MetaDataRetriever
     @Override
     public Result<MetaData> getMetaData(MetaDataKey key) {
         try {
@@ -292,10 +301,9 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
             Class<?> object = Class.forName(key.getId());
             debug("got class");
             MetaDataModel model = new DefaultPojoMetaDataModel(object);
+            debug("Constructing and returning");
+
             return new DefaultResult<MetaData>(new DefaultMetaData(model));
-            //PojoMetaDataBuilder<?> metaDataBuilder = new DefaultMetaDataBuilder().createPojo(object);
-            //debug("Constructing and returning");
-            //return new DefaultResult<MetaData>(new DefaultMetaData(metaDataBuilder.build()));
         } catch(Exception ex) {
             return new DefaultResult<MetaData>(null, Status.FAILURE, "Could not retrieve metadata for key " + key.getId() + ": " + ex.getMessage());
         }

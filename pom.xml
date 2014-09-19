@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.mule.tools.devkit</groupId>
         <artifactId>mule-devkit-parent</artifactId>
-        <version>3.5.0</version>
+        <version>3.4.3</version>
     </parent>
 
     <properties>
@@ -165,13 +165,13 @@
         <repository>
             <id>c24</id>
             <name>C24 Maven Repository</name>
-            <url>http://repo.c24io.net:8081/nexus/content/repositories/releases</url>
+            <url>http://repo.c24io.net/nexus/content/repositories/releases</url>
         </repository>
         <snapshotRepository>
             <uniqueVersion>false</uniqueVersion>
             <id>c24-snapshot</id>
             <name>C24 Maven Snapshot Repository</name>
-            <url>http://repo.c24io.net:8081/nexus/content/repositories/snapshots</url>
+            <url>http://repo.c24io.net/nexus/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 </project>

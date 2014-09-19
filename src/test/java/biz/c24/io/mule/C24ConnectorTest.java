@@ -4,6 +4,8 @@
 
 package biz.c24.io.mule;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.junit.Test;
@@ -79,11 +81,22 @@ public class C24ConnectorTest {
 
     }
     
-  /*  
-    @Test
-    public void testConnector() {
-        C24Connector connector = new C24Connector();
-  
+    
+    private String readFile(String filename) throws IOException {
+        InputStream input = C24ConnectorTest.class.getClassLoader().getResourceAsStream(filename);
+        byte[] bytes = new byte[input.available()];
+        input.read(bytes, 0, bytes.length);
+        return new String(bytes);
     }
-   */ 
+    
+    @Test
+    public void testConnector() throws Exception {
+        C24Connector connector = new C24Connector();
+        InputStream input = C24ConnectorTest.class.getClassLoader().getResourceAsStream("Customers.xml");
+
+        String output = connector.transform("biz.c24.io.gettingstarted.transform.GenerateContactListTransform", input, null, true, true, null);
+        
+        assertThat(output, is(readFile("Customers.txt")));
+    }
+    
 }

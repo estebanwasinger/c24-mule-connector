@@ -8,17 +8,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.util.List;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mule.api.MuleEvent;
-import org.mule.common.Result;
-import org.mule.common.metadata.MetaData;
-import org.mule.common.metadata.MetaDataKey;
 import org.mule.construct.Flow;
 import org.mule.tck.junit4.FunctionalTestCase;
 import org.mule.util.FileUtils;
+
 
 public class C24ConnectorFlowTest extends FunctionalTestCase
 {
@@ -48,12 +44,10 @@ public class C24ConnectorFlowTest extends FunctionalTestCase
 	@Override
     protected String getConfigResources()
     {
-        //return "democ24app.xml";
-        return "blank-mule-config.xml";
+        return "democ24app.xml";
     }
 
     @Test
-    @Ignore
     public void testFlow() throws Exception
     {
 
@@ -84,7 +78,7 @@ public class C24ConnectorFlowTest extends FunctionalTestCase
      */
     protected <T, U> void runFlowAndExpect(String flowName, T expect, U payload) throws Exception
     {
-        assertEquals(expect, this.runFlow(flowName, payload));
+        assertEquals(expect, this.runFlow(flowName, payload).getMessage().getPayload());
     }
     
 

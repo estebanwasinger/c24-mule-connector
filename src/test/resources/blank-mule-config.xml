@@ -6,13 +6,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
     http://www.mulesoft.org/schema/mule/c24 http://www.mulesoft.org/schema/mule/c24/current/mule-c24.xsd
     http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-    http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd"
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd"
 >
-    <c24:config name="C24_Connector" doc:name="C24 Connector"/>
-    <flow name="democ24appFlow1" doc:name="democ24appFlow1">
-        <file:inbound-endpoint path="input" responseTimeout="10000" doc:name="File">
-            <file:filename-regex-filter pattern=".*\.xml" caseSensitive="true"/>
-        </file:inbound-endpoint>
-        <c24:transform config-ref="C24_Connector" transform="biz.c24.io.gettingstarted.transform.GenerateContactListTransform" doc:name="C24 Connector"/>
-    </flow>
+
 </mule>
