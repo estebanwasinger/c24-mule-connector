@@ -25,13 +25,13 @@ public class C24ConnectorTest {
     
     private void testDataSense() throws ClassNotFoundException {
         
-        Result<List<MetaDataKey>> result = connector.getMetaDataKeys();
-        assertTrue(result.getStatus().compareTo(Status.SUCCESS) == 0);
-        assertThat(result.get(), is(not(nullValue())));
+        List<MetaDataKey> result = connector.getMetaDataKeys();
+        //assertTrue(result.getStatus().compareTo(Status.SUCCESS) == 0);
+        assertThat(result, is(not(nullValue())));
         
         boolean foundTestTransform = false;
         
-        for(MetaDataKey key : result.get()) {
+        for(MetaDataKey key : result) {
             
             assertTrue(Transform.class.isAssignableFrom(Class.forName(key.getId())));
             
@@ -47,7 +47,7 @@ public class C24ConnectorTest {
                 foundTestTransform = true;
                 assertThat(key.getId(), is("biz.c24.io.gettingstarted.transform.GenerateContactListTransform"));
                 
-                MetaData metaData = connector.getMetaData(key).get();
+                MetaData metaData = connector.getMetaData(key);
                 assertThat(metaData, is(not(nullValue())));
                 assertThat(metaData.getPayload().getDataType(), is(DataType.POJO));
             }
@@ -74,10 +74,10 @@ public class C24ConnectorTest {
     public void testConstrainedNonMatchingDataSense() {
         connector.setBasePackage("nonexistent.test.*");
         
-        Result<List<MetaDataKey>> result = connector.getMetaDataKeys();
-        assertTrue(result.getStatus().compareTo(Status.SUCCESS) == 0);
-        assertThat(result.get(), is(not(nullValue())));
-        assertThat(result.get().size(), is(0));
+        List<MetaDataKey> result = connector.getMetaDataKeys();
+        //assertTrue(result.getStatus().compareTo(Status.SUCCESS) == 0);
+        assertThat(result, is(not(nullValue())));
+        assertThat(result.size(), is(0));
 
     }
     

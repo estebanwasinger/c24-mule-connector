@@ -4,19 +4,20 @@
 
 package biz.c24.io.mule;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.InputStream;
 
 import org.junit.Test;
 import org.mule.api.MuleEvent;
 import org.mule.construct.Flow;
+import org.mule.modules.tests.ConnectorTestCase;
 import org.mule.tck.junit4.FunctionalTestCase;
 import org.mule.util.FileUtils;
 
 
-public class C24ConnectorFlowTest extends FunctionalTestCase
+public class C24ConnectorFlowTest extends ConnectorTestCase
 {
     
     // =============================
@@ -44,18 +45,63 @@ public class C24ConnectorFlowTest extends FunctionalTestCase
 	@Override
     protected String getConfigResources()
     {
-        return "democ24app.xml";
+        return "automation-test-flows.xml";
     }
 
     @Test
     public void testFlow() throws Exception
     {
-
         String payload = FileUtils.readFileToString(new File("src/test/resources/Customers.xml"));
         String expected = FileUtils.readFileToString(new File("src/test/resources/Customers.txt"));
-        runFlowAndExpect("democ24appFlow1", expected, payload);
-        assertTrue(true);
+        runFlowAndExpect("contactListTransformFlow", expected, payload);
     }
+    
+    @Test
+    public void testInputStreamFlow() throws Exception
+    {
+        InputStream payload = getClass().getClassLoader().getResourceAsStream("Customers.xml");
+        String expected = FileUtils.readFileToString(new File("src/test/resources/Customers.txt"));
+        runFlowAndExpect("contactListTransformFlow", expected, payload);
+    }
+    
+    @Test
+    public void testInvalidFlow() throws Exception
+    {
+        String payload = FileUtils.readFileToString(new File("src/test/resources/InvalidCustomers.xml"));
+        String expected = FileUtils.readFileToString(new File("src/test/resources/Customers.txt"));
+        try {
+            runFlowAndExpect("contactListTransformFlow", expected, payload);
+            fail("Invalid flow not detected");
+        } catch(C24Exception ex) {
+            // Expected behaviour
+        }
+    }   
+    
+    @Test
+    public void testInvalidFlowNonValidating() throws Exception
+    {
+        String payload = FileUtils.readFileToString(new File("src/test/resources/InvalidCustomers.xml"));
+        String expected = FileUtils.readFileToString(new File("src/test/resources/Customers.txt"));
+
+        runFlowAndExpect("contactListNonValidatingTransformFlow", expected, payload);
+
+    }    
+    
+    @Test
+    public void testIllegalFlow() throws Exception
+    {
+        String payload = FileUtils.readFileToString(new File("src/test/resources/IllegalCustomers.xml"));
+        String expected = FileUtils.readFileToString(new File("src/test/resources/Customers.txt"));
+        try {
+            runFlowAndExpect("contactListTransformFlow", expected, payload);
+            fail("Illegal flow not detected");
+        } catch(C24Exception ex) {
+            // Expected behaviour
+        }
+    } 
+    
+    
+    //contactListNonValidatingTransformFlow
 
     /**
     * Run the flow specified by name and assert equality on the expected output
