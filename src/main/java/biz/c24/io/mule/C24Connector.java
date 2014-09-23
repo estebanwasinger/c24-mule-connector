@@ -60,6 +60,7 @@ import biz.c24.io.api.transform.Transform;
  * in your Mule flows.
  *
  */
+// @Connector(name = "c24", schemaVersion = "1.0.0", friendlyName = "C24 Connector", metaData = MetaDataSwitch.DYNAMIC, minMuleVersion="3.4")
 @Module(name = "c24", schemaVersion = "1.0.0", friendlyName = "C24 Connector", metaData = MetaDataSwitch.DYNAMIC)
 //        namespace = "http://schema.c24.biz/mule", schemaLocation = "http://schema.c24.biz/mule.xsd")
 public class C24Connector implements ConnectorMetaDataEnabled  {
@@ -272,7 +273,7 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
         
     }
     
-    @MetaDataKeyRetriever
+//    @MetaDataKeyRetriever
     @Override
     public Result<List<MetaDataKey>> getMetaDataKeys() {
         try {
@@ -292,7 +293,7 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
         
     }
     
-    @MetaDataRetriever
+//    @MetaDataRetriever
     @Override
     public Result<MetaData> getMetaData(MetaDataKey key) {
         try {

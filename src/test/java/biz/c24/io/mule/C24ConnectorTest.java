@@ -23,10 +23,23 @@ public class C24ConnectorTest {
 
     private C24Connector connector = new C24Connector();
     
+    private List<MetaDataKey> getMetaDataKeys() {
+        Result<List<MetaDataKey>> result = connector.getMetaDataKeys();
+        assertThat(result, is(not(nullValue())));
+        assertTrue(result.getStatus().compareTo(Status.SUCCESS) == 0);
+        return connector.getMetaDataKeys().get();
+    }
+    
+    private MetaData getMetaData(MetaDataKey key) {
+        Result<MetaData> result = connector.getMetaData(key);
+        assertThat(result, is(not(nullValue())));
+        assertTrue(result.getStatus().compareTo(Status.SUCCESS) == 0);
+        return result.get();
+    }
+    
     private void testDataSense() throws ClassNotFoundException {
         
-        List<MetaDataKey> result = connector.getMetaDataKeys();
-        //assertTrue(result.getStatus().compareTo(Status.SUCCESS) == 0);
+        List<MetaDataKey> result = getMetaDataKeys();
         assertThat(result, is(not(nullValue())));
         
         boolean foundTestTransform = false;
@@ -47,7 +60,7 @@ public class C24ConnectorTest {
                 foundTestTransform = true;
                 assertThat(key.getId(), is("biz.c24.io.gettingstarted.transform.GenerateContactListTransform"));
                 
-                MetaData metaData = connector.getMetaData(key);
+                MetaData metaData = getMetaData(key);
                 assertThat(metaData, is(not(nullValue())));
                 assertThat(metaData.getPayload().getDataType(), is(DataType.POJO));
             }
@@ -74,7 +87,7 @@ public class C24ConnectorTest {
     public void testConstrainedNonMatchingDataSense() {
         connector.setBasePackage("nonexistent.test.*");
         
-        List<MetaDataKey> result = connector.getMetaDataKeys();
+        List<MetaDataKey> result = getMetaDataKeys();
         //assertTrue(result.getStatus().compareTo(Status.SUCCESS) == 0);
         assertThat(result, is(not(nullValue())));
         assertThat(result.size(), is(0));
