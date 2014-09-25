@@ -107,7 +107,7 @@ public class C24ConnectorTest {
         C24Connector connector = new C24Connector();
         InputStream input = C24ConnectorTest.class.getClassLoader().getResourceAsStream("Customers.xml");
 
-        String output = connector.transform("biz.c24.io.gettingstarted.transform.GenerateContactListTransform", input, null, true, true, null);
+        String output = connector.convert("biz.c24.io.gettingstarted.transform.GenerateContactListTransform", input, null, true, true, null);
         
         assertThat(output, is(readFile("Customers.txt")));
     }

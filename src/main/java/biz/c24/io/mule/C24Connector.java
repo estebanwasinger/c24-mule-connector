@@ -17,13 +17,18 @@ import javax.inject.Inject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Plugin;
 import org.mule.api.MuleEvent;
 import org.mule.api.annotations.Configurable;
+import org.mule.api.annotations.Connector;
 import org.mule.api.annotations.MetaDataKeyRetriever;
 import org.mule.api.annotations.MetaDataRetriever;
 import org.mule.api.annotations.MetaDataSwitch;
 import org.mule.api.annotations.Module;
 import org.mule.api.annotations.Processor;
+import org.mule.api.annotations.display.Summary;
 import org.mule.api.annotations.param.Default;
 import org.mule.api.annotations.param.MetaDataKeyParam;
 import org.mule.api.annotations.param.Optional;
@@ -47,7 +52,9 @@ import org.reflections.util.FilterBuilder;
 import biz.c24.api.LicenseException;
 import biz.c24.io.api.C24;
 import biz.c24.io.api.C24.C24Reader;
+import biz.c24.io.api.C24.C24Writer;
 import biz.c24.io.api.data.ComplexDataObject;
+import biz.c24.io.api.data.SimpleDataObject;
 import biz.c24.io.api.data.ValidationException;
 import biz.c24.io.api.transform.Transform;
 
@@ -60,16 +67,18 @@ import biz.c24.io.api.transform.Transform;
  * in your Mule flows.
  *
  */
-// @Connector(name = "c24", schemaVersion = "1.0.0", friendlyName = "C24 Connector", metaData = MetaDataSwitch.DYNAMIC, minMuleVersion="3.4")
-@Module(name = "c24", schemaVersion = "1.0.0", friendlyName = "C24 Connector", metaData = MetaDataSwitch.DYNAMIC)
+
+@Connector(name = "c24", schemaVersion = "1.1.0", friendlyName = "C24-iO Connector", minMuleVersion="3.4", metaData = MetaDataSwitch.DYNAMIC)
+//@Module(name = "c24", schemaVersion = "1.0.0", friendlyName = "C24 Connector", metaData = MetaDataSwitch.DYNAMIC)
 //        namespace = "http://schema.c24.biz/mule", schemaLocation = "http://schema.c24.biz/mule.xsd")
-public class C24Connector implements ConnectorMetaDataEnabled  {
+public class C24Connector {
     
     /**
      * The C24 iO licence to use (required for licensed data models only)
      */
     @Optional
     @Configurable
+    @Summary("The path to the licence file to use. Not required for C24-iO Open Edition or if you are only using unlicensed models.")
     private String licenceFile;
     
     protected transient Log logger = LogFactory.getLog(getClass());
@@ -79,6 +88,7 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
     private final boolean DEBUG = false;
     
     protected java.io.Writer getWriter() {
+        
         if(writer == null) {
             try {
                 writer = new FileWriter(new java.io.File("/tmp/op.txt"));
@@ -163,10 +173,176 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
         return t;
     }
     
+    
     /**
-     * c24 Transformer
+     * C24-iO Message Parsing
+     * <p/>
+     * {@sample.xml ../../../doc/C24-connector.xml.sample c24:parse}
+     * 
+     * @param type The fully-qualified classname of the type that we expect to parse. The returned object will be an instance of this type.
+     * @param source The String, Reader or InputStream to parse into a C24 Object
+     * @param encoding The encoding of the input data
+     * @param event The Mule event
+     * @return A Java object representing the parsed form of the source
+     * @throws C24Exception if the message cannot be parsed
+     */
+    @Processor
+    @Inject
+    // Mule doesn't support @Processor and generics
+    //public <T extends ComplexDataObject> T parse(String type,
+    public ComplexDataObject parse(String type,
+                                   @Optional @Default("#[payload]") Object source,
+                                   @Optional String encoding, 
+                                   MuleEvent event) throws C24Exception {
+    
+        try {
+                Class<? extends ComplexDataObject> typeClass = (Class<? extends ComplexDataObject>) Class.forName(type);
+
+            
+            if(!ComplexDataObject.class.isAssignableFrom(typeClass)) {
+                throw new C24Exception(CoreMessages.createStaticMessage(type + " is not a valid C24-iO type. It must extend ComplexDataObject."), event);
+            }
+            
+            C24Reader<? extends ComplexDataObject> reader = C24.parse(typeClass);
+            if(encoding != null && encoding.length() > 0) {
+                reader.using(encoding);
+            }
+            
+            if(source instanceof Reader) {
+                return reader.from((Reader)source);
+            } else if(source instanceof InputStream) {
+                return reader.from((InputStream)source);            
+            } else if(source instanceof String) {
+                return reader.from((String)source);            
+            } else {
+                throw new C24Exception(CoreMessages.createStaticMessage("Can't instantiate reader for unknown payload type: " + source.getClass()), event);
+            }    
+        } catch (ClassNotFoundException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage(type + " cannot be found."), event, e);
+        } catch (IOException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage("Failed to parse message."), event, e);
+        }     
+    }
+ 
+    
+    /**
+     * C24-iO validation.
+     * Validates the message, either returning the message or throwing an exception if it is invalid.
+     * <p/>
+     * {@sample.xml ../../../doc/C24-connector.xml.sample c24:validate}
+     * 
+     * @param source The parsed message to validate
+     * @param event The Mule event
+     * @return The message
+     * @throws C24Exception if the message is invalid.
+     */
+    @Processor
+    @Inject
+    public ComplexDataObject validate(@Optional @Default("#[payload]") Object source,
+                                      MuleEvent event) throws C24Exception {
+        try {
+            if(source instanceof ComplexDataObject) {
+                ComplexDataObject cdo = (ComplexDataObject) source;
+                C24.validate(cdo);
+                return cdo;
+            } else {
+                throw new C24Exception(CoreMessages.createStaticMessage("Message supplied to validate was not a C24-iO object (type " + source.getClass().getName() + " does not extend ComplexDataObject)."), event);
+            }
+        } catch (ValidationException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage("Message is invalid."), event, e);
+        }
+
+    }
+    
+    
+    /**
+     * C24-iO Transform.
+     * Transforms an object between models using a C24-iO transform
      * <p/>
      * {@sample.xml ../../../doc/C24-connector.xml.sample c24:transform}
+     *
+     * @param transform The Transform to use
+     * @param source The source data to be transformed
+     * @param event The Mule event
+     * @return The output from the transform
+     * @throws C24Exception if the message cannot be transformed
+     */
+    @Processor
+    @Inject
+    public Object transform(String transform,
+                                       @Optional @Default("#[payload]") Object source,
+                                       MuleEvent event) throws C24Exception {
+
+        try {
+            Transform xform = getTransform(transform, event);
+            return C24.transform(source, xform);
+        } catch (ClassNotFoundException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform."), event, e);
+        } catch (InstantiationException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform."), event, e);
+        } catch (IllegalAccessException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform."), event, e);
+        } catch (ValidationException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage("Message is invalid."), event, e);
+        }
+
+    }
+    
+    
+    /**
+     * C24-iO marshal
+     * Converts a bound Java message to a wire format.
+     * <p/>
+     * {@sample.xml ../../../doc/C24-connector.xml.sample c24:marshal}
+     * 
+     * @param source The Java message
+     * @param format The format to generate (defaults to the model's default output format).
+     * @param encoding The character encoding to use (defaults to the model's default encoding)
+     * @param event The Mule Event
+     * @return A String containing the marshalled form of the source
+     * @throws C24Exception if the message cannot be marshalled
+     */
+    @Processor
+    @Inject
+    public String marshal(@Optional @Default("#[payload]") Object source,
+                          @Optional C24.Format format,
+                          @Optional String encoding,
+                          MuleEvent event) throws C24Exception {
+        C24Writer<? extends ComplexDataObject> writer;
+        
+        try {
+            if(source instanceof ComplexDataObject) {
+                writer = C24.write((ComplexDataObject)source);
+            } else if(source instanceof SimpleDataObject) {
+                writer = C24.write((SimpleDataObject)source);
+            } else {
+                throw new C24Exception(CoreMessages.createStaticMessage("Message supplied to marshal was not a C24-iO object (type " + source.getClass().getName() + " does not extend ComplexDataObject or SimpleDataObject)."), event);                
+            }
+            
+            if(format != null) {
+                writer.as(format);
+            }
+            if(encoding != null) {
+                writer.using(encoding);
+            }
+            
+            StringWriter str = new StringWriter();     
+            writer.to(str);
+            return str.toString();
+            
+        } catch (IOException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage("Failed to marshall message."), event, e);       
+        }
+        
+   
+    }
+    
+   
+    /**
+     * c24 Converter.
+     * A convenience method to parse, validate, transform and marshal a message in a single operation.
+     * <p/>
+     * {@sample.xml ../../../doc/C24-connector.xml.sample c24:convert}
      *
      * @param transform The Transform to use
      * @param source The String, Reader or InputStream to parse into a C24 Object
@@ -175,16 +351,16 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
      * @param validateOutput Whether the result of the transformation should be checked for validity
      * @param event The Mule event
      * @return The marshaled result of the transformation
-     * @throws Exception An exception when there's an error
+     * @throws C24Exception An exception when there's an error
      */
     @Processor
     @Inject
-    public String transform(@MetaDataKeyParam String transform,
+    public String convert(/* @MetaDataKeyParam */ String transform,
                             @Optional @Default("#[payload]") Object source, 
                             @Optional @Default("") String encoding,
                             @Optional @Default("true") boolean validateInput,
                             @Optional @Default("true") boolean validateOutput,
-                            MuleEvent event) throws Exception {
+                            MuleEvent event) throws C24Exception {
 
         
          try {
@@ -230,6 +406,12 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
             throw new C24Exception(CoreMessages.createStaticMessage("Message is invalid"), event, vEx);
         } catch (IOException e) {
             throw new C24Exception(CoreMessages.createStaticMessage("Message is invalid"), event, e);
+        } catch (ClassNotFoundException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform."), event, e);
+        } catch (InstantiationException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform."), event, e);
+        } catch (IllegalAccessException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform."), event, e);
         }
     }
     
@@ -274,7 +456,7 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
     }
     
 //    @MetaDataKeyRetriever
-    @Override
+    //@Override
     public Result<List<MetaDataKey>> getMetaDataKeys() {
         try {
             debug("Entering getMetaDataKeys");
@@ -288,13 +470,13 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
 
             return new DefaultResult<List<MetaDataKey>>(keys);
         } catch(Exception ex) {
-            return new DefaultResult<List<MetaDataKey>>(null, Status.FAILURE, "Could not retrieve metadata keys: " + ex.getMessage());
+            return null;
         }
         
     }
     
 //    @MetaDataRetriever
-    @Override
+    //@Override
     public Result<MetaData> getMetaData(MetaDataKey key) {
         try {
             debug("Entering getMetaData");
@@ -306,7 +488,7 @@ public class C24Connector implements ConnectorMetaDataEnabled  {
 
             return new DefaultResult<MetaData>(new DefaultMetaData(model));
         } catch(Exception ex) {
-            return new DefaultResult<MetaData>(null, Status.FAILURE, "Could not retrieve metadata for key " + key.getId() + ": " + ex.getMessage());
+            return null;
         }
     }
 }

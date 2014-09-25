@@ -10,10 +10,10 @@
 >
     <c24:config name="C24_Connector" doc:name="C24 Connector"/>
     <flow name="contactListTransformFlow" doc:name="contactListTransformFlow">
-        <c24:transform config-ref="C24_Connector" transform="biz.c24.io.gettingstarted.transform.GenerateContactListTransform" doc:name="C24 Connector"/>
+        <c24:convert config-ref="C24_Connector" transform="biz.c24.io.gettingstarted.transform.GenerateContactListTransform" doc:name="C24 Connector"/>
     </flow>
     
     <flow name="contactListNonValidatingTransformFlow" doc:name="contactListNonValidatingTransformFlow">
-        <c24:transform config-ref="C24_Connector" transform="biz.c24.io.gettingstarted.transform.GenerateContactListTransform" validateInput="false" validateOutput="false" doc:name="C24 Connector"/>
+        <c24:convert config-ref="C24_Connector" transform="biz.c24.io.gettingstarted.transform.GenerateContactListTransform" validateInput="false" validateOutput="false" doc:name="C24 Connector"/>
     </flow>
 </mule>

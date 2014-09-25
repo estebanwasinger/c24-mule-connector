@@ -1,3 +1,19 @@
+<!-- BEGIN_INCLUDE(c24:parse) -->
+    <c24:parse type="biz.c24.io.gettingstarted.customer.CustomersFile"/>
+<!-- END_INCLUDE(c24:parse) -->
+
+<!-- BEGIN_INCLUDE(c24:validate) -->
+    <c24:validate/>
+<!-- END_INCLUDE(c24:validate) -->
+
 <!-- BEGIN_INCLUDE(c24:transform) -->
-    <c24:transform source-ref="#[payload]" transform="foo" encoding="UTF-8" validateInput="true" validateOutput="true"/>
+    <c24:transform transform="my.transform"/>
 <!-- END_INCLUDE(c24:transform) -->
+
+<!-- BEGIN_INCLUDE(c24:marshal) -->
+    <c24:marshal/>
+<!-- END_INCLUDE(c24:marshal) -->
+
+<!-- BEGIN_INCLUDE(c24:convert) -->
+    <c24:convert source-ref="#[payload]" transform="foo" encoding="UTF-8" validateInput="true" validateOutput="true"/>
+<!-- END_INCLUDE(c24:convert) -->
