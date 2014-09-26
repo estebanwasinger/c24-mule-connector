@@ -9,11 +9,32 @@
     http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd"
 >
     <c24:config name="C24_Connector" doc:name="C24 Connector"/>
-    <flow name="contactListTransformFlow" doc:name="contactListTransformFlow">
+    
+    <flow name="customersFileParseFlow">
+        <c24:parse type="biz.c24.io.gettingstarted.customer.CustomersFile"/>
+    </flow>
+    
+    <flow name="validateFlow">
+        <c24:validate/>
+    </flow>
+    
+    <flow name="customersFileTransformFlow">
+        <c24:transform transform="biz.c24.io.gettingstarted.transform.GenerateContactListTransform"/>
+    </flow>
+    
+    <flow name="marshalFlow">
+        <c24:marshal/>
+    </flow>
+    
+    <flow name="jsonMarshalFlow">
+        <c24:marshal format="JSON" encoding="ASCII"/>
+    </flow>
+    
+    <flow name="contactListConvertFlow" doc:name="contactListConvertFlow">
         <c24:convert config-ref="C24_Connector" transform="biz.c24.io.gettingstarted.transform.GenerateContactListTransform" doc:name="C24 Connector"/>
     </flow>
     
-    <flow name="contactListNonValidatingTransformFlow" doc:name="contactListNonValidatingTransformFlow">
+    <flow name="contactListNonValidatingConvertFlow" doc:name="contactListNonValidatingConvertFlow">
         <c24:convert config-ref="C24_Connector" transform="biz.c24.io.gettingstarted.transform.GenerateContactListTransform" validateInput="false" validateOutput="false" doc:name="C24 Connector"/>
     </flow>
 </mule>
