@@ -68,7 +68,7 @@ import biz.c24.io.api.transform.Transform;
  *
  */
 
-@Connector(name = "c24", schemaVersion = "1.1.0", friendlyName = "C24-iO Connector", minMuleVersion="3.4", metaData = MetaDataSwitch.DYNAMIC)
+@Connector(name = "c24", schemaVersion = "1.1.0", friendlyName = "C24-iO Connector", minMuleVersion="3.4", metaData = MetaDataSwitch.OFF)
 //@Module(name = "c24", schemaVersion = "1.0.0", friendlyName = "C24 Connector", metaData = MetaDataSwitch.DYNAMIC)
 //        namespace = "http://schema.c24.biz/mule", schemaLocation = "http://schema.c24.biz/mule.xsd")
 public class C24Connector {
@@ -182,6 +182,7 @@ public class C24Connector {
      * @param type The fully-qualified classname of the type that we expect to parse. The returned object will be an instance of this type.
      * @param source The String, Reader or InputStream to parse into a C24 Object
      * @param encoding The encoding of the input data
+     * @param format The format to read (defaults to the model's default input format).
      * @param event The Mule event
      * @return A Java object representing the parsed form of the source
      * @throws C24Exception if the message cannot be parsed
@@ -193,6 +194,7 @@ public class C24Connector {
     public ComplexDataObject parse(String type,
                                    @Optional @Default("#[payload]") Object source,
                                    @Optional String encoding, 
+                                   @Optional C24.Format format,
                                    MuleEvent event) throws C24Exception {
     
         try {
@@ -206,6 +208,9 @@ public class C24Connector {
             C24Reader<? extends ComplexDataObject> reader = C24.parse(typeClass);
             if(encoding != null && encoding.length() > 0) {
                 reader.using(encoding);
+            }
+            if(format != null) {
+                reader.as(format);
             }
             
             if(source instanceof Reader) {

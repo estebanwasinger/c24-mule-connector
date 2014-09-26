@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) C24 Technologies Limited. All rights reserved.
+ */
+
 package biz.c24.io.mule;
 
 import static org.junit.Assert.assertEquals;

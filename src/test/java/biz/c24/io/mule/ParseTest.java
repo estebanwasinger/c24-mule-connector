@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) C24 Technologies Limited. All rights reserved.
+ */
+
 package biz.c24.io.mule;
 
 import static org.junit.Assert.*;
@@ -21,6 +25,18 @@ public class ParseTest extends C24ConnectorTestCase {
         CustomersFile cf = (CustomersFile)obj;
         
         assertThat(cf.getCustomer().length, is(4));
+    }
+    
+    @Test
+    public void testIllegalParse() throws Exception {
+        String payload = "INVALID";
+        
+        try {
+            runFlow("customersFileParseFlow", payload).getMessage().getPayload();
+            fail("Illegal message failed to cause parsing exception");
+        } catch(C24Exception ex) {
+            // Expected behaviour
+        }
     }
 
 }
