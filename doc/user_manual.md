@@ -92,9 +92,9 @@ Remember that if your transform and models are in separate jars, you'll need to 
 
 The C24-iO Connector uses a global configuration to make available transforms and licensing.
 
-Open your application's flow, select the _Global Elements_ tab at the bottom and click the _Create_ button. In the pop-up window, open _Connector Configuration_ and select _C24 Connector_ then click _OK_.
+Open your application's flow, select the _Global Elements_ tab at the bottom and click the _Create_ button. In the pop-up window, open _Connector Configuration_ and select _C24-iO Connector_ then click _OK_.
 
-![Create a global C24 Connector Configuration](img/CreateConfig.png "Create the C24 Connector Global Configuration")
+![Create a global C24-iO Connector Configuration](img/CreateConfig.png "Create the C24-iO Connector Global Configuration")
 
 If you are using licensed models (such as SWIFT) then at runtime iO will need a valid licence file. Please see <http://dev.c24.biz/api_javadoc/4.6/biz/c24/io/api/C24.html#withLicence(java.lang.String)> for details on how the parameter entered here will be interpreted.
 
