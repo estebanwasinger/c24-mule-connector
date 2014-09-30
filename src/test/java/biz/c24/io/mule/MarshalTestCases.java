@@ -9,46 +9,46 @@ import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
-import biz.c24.io.gettingstarted.customer.Address;
+import biz.c24.io.gettingstarted.contact.ContactDetailsFile;
 import biz.c24.io.gettingstarted.customer.Customer;
+import biz.c24.io.gettingstarted.customer.CustomersFile;
 
-public class ValidateTest extends C24ConnectorTestCase {
+public class MarshalTestCases extends C24ConnectorTestCase {
     
     @Test
-    public void testValid() throws Exception {
+    public void testDefaultMarshal() throws Exception {
         Customer customer = new Customer();
         customer.initToMinCardinality();
         customer.setName("Al Bundy");
         customer.setCustomerAcronym("AB");
-        customer.setCustomerNumber("1");
+        customer.setCustomerNumber("135");
         customer.setPostZipCode("AA11AA");
         customer.setTelephoneNumber("01234 567890");
         customer.setFaxNumber("01234 567891");
         
-        Object obj = runFlow("validateFlow", customer).getMessage().getPayload();
+        Object obj = runFlow("marshalFlow", customer).getMessage().getPayload();
         
-        assertTrue(obj instanceof Customer);
-        assertThat(((Customer)obj).getName(), is(customer.getName()));
+        assertTrue(obj instanceof String);
+        
+        assertTrue(((String)obj).startsWith("<"));
     }
     
     @Test
-    public void testInvalid() throws Exception {
+    public void testFormatMarshal() throws Exception {
         Customer customer = new Customer();
         customer.initToMinCardinality();
         customer.setName("Al Bundy");
-        // Invalid acronym
-        customer.setCustomerAcronym("aB");
-        customer.setCustomerNumber("1");
+        customer.setCustomerAcronym("AB");
+        customer.setCustomerNumber("135");
         customer.setPostZipCode("AA11AA");
         customer.setTelephoneNumber("01234 567890");
         customer.setFaxNumber("01234 567891");
         
-        try {
-            Object obj = runFlow("validateFlow", customer).getMessage().getPayload();
-            fail("Invalid message did not generate an exception");
-        } catch(C24Exception ex) {
-            // Expected behaviour
-        }
+        Object obj = runFlow("jsonMarshalFlow", customer).getMessage().getPayload();
+        
+        assertTrue(obj instanceof String);
+        
+        assertTrue(((String)obj).startsWith("{"));
     }
 
 }

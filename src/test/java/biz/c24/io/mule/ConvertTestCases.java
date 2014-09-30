@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.mule.util.FileUtils;
 
 
-public class ConvertTest extends C24ConnectorTestCase
+public class ConvertTestCases extends C24ConnectorTestCase
 {
     
 

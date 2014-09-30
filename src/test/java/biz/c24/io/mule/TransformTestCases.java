@@ -13,7 +13,7 @@ import biz.c24.io.gettingstarted.contact.ContactDetailsFile;
 import biz.c24.io.gettingstarted.customer.Customer;
 import biz.c24.io.gettingstarted.customer.CustomersFile;
 
-public class TransformTest extends C24ConnectorTestCase {
+public class TransformTestCases extends C24ConnectorTestCase {
     
     @Test
     public void testTransform() throws Exception {

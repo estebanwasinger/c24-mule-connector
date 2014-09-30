@@ -13,7 +13,7 @@ import org.mule.util.FileUtils;
 
 import biz.c24.io.gettingstarted.customer.CustomersFile;
 
-public class ParseTest extends C24ConnectorTestCase {
+public class ParseTestCases extends C24ConnectorTestCase {
     
     @Test
     public void testParse() throws Exception {
