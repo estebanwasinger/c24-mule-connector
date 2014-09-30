@@ -10,6 +10,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,25 +18,17 @@ import javax.inject.Inject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
 import org.mule.api.MuleEvent;
 import org.mule.api.annotations.Configurable;
 import org.mule.api.annotations.Connector;
-import org.mule.api.annotations.MetaDataKeyRetriever;
-import org.mule.api.annotations.MetaDataRetriever;
 import org.mule.api.annotations.MetaDataSwitch;
-import org.mule.api.annotations.Module;
 import org.mule.api.annotations.Processor;
 import org.mule.api.annotations.display.Summary;
 import org.mule.api.annotations.param.Default;
-import org.mule.api.annotations.param.MetaDataKeyParam;
 import org.mule.api.annotations.param.Optional;
+import org.mule.api.annotations.param.Payload;
 import org.mule.common.DefaultResult;
 import org.mule.common.Result;
-import org.mule.common.Result.Status;
-import org.mule.common.metadata.ConnectorMetaDataEnabled;
 import org.mule.common.metadata.DefaultMetaData;
 import org.mule.common.metadata.DefaultMetaDataKey;
 import org.mule.common.metadata.DefaultPojoMetaDataModel;
@@ -51,11 +44,47 @@ import org.reflections.util.FilterBuilder;
 
 import biz.c24.api.LicenseException;
 import biz.c24.io.api.C24;
+import biz.c24.io.api.ParserException;
+import biz.c24.io.api.Utils;
 import biz.c24.io.api.C24.C24Reader;
 import biz.c24.io.api.C24.C24Writer;
+import biz.c24.io.api.data.Base64BinaryDataType;
+import biz.c24.io.api.data.BooleanDataType;
+import biz.c24.io.api.data.ByteDataType;
 import biz.c24.io.api.data.ComplexDataObject;
+import biz.c24.io.api.data.DataType;
+import biz.c24.io.api.data.DecimalDataType;
+import biz.c24.io.api.data.DoubleDataType;
+import biz.c24.io.api.data.FloatDataType;
+import biz.c24.io.api.data.GenericDateDataType;
+import biz.c24.io.api.data.ISO8601DateDataType;
+import biz.c24.io.api.data.ISO8601DateTimeDataType;
+import biz.c24.io.api.data.ISO8601TimeDataType;
+import biz.c24.io.api.data.IntDataType;
+import biz.c24.io.api.data.IntegerDataType;
+import biz.c24.io.api.data.LongDataType;
+import biz.c24.io.api.data.NegativeIntegerDataType;
+import biz.c24.io.api.data.NonNegativeIntegerDataType;
+import biz.c24.io.api.data.NonPositiveIntegerDataType;
+import biz.c24.io.api.data.NumberDataType;
+import biz.c24.io.api.data.PositiveIntegerDataType;
+import biz.c24.io.api.data.SQLBlob;
+import biz.c24.io.api.data.SQLBlobDataType;
+import biz.c24.io.api.data.SQLClob;
+import biz.c24.io.api.data.SQLClobDataType;
+import biz.c24.io.api.data.SQLDateDataType;
+import biz.c24.io.api.data.SQLTimeDataType;
+import biz.c24.io.api.data.SQLTimestampDataType;
+import biz.c24.io.api.data.ShortDataType;
 import biz.c24.io.api.data.SimpleDataObject;
+import biz.c24.io.api.data.SimpleDataType;
+import biz.c24.io.api.data.StringDataType;
+import biz.c24.io.api.data.UnsignedByteDataType;
+import biz.c24.io.api.data.UnsignedIntDataType;
+import biz.c24.io.api.data.UnsignedLongDataType;
+import biz.c24.io.api.data.UnsignedShortDataType;
 import biz.c24.io.api.data.ValidationException;
+import biz.c24.io.api.data.WhiteSpaceEnum;
 import biz.c24.io.api.transform.Transform;
 
 /**
@@ -166,10 +195,6 @@ public class C24Connector {
         
         Transform t = (Transform) transformClass.newInstance();
         
-        if(t.getInputCount() != 1 || t.getOutputCount() != 1) {
-            throw new C24Exception(CoreMessages.createStaticMessage("The Mule C24 Connector only currently supports 1:1 transformations"), event);
-        }
-        
         return t;
     }
     
@@ -262,7 +287,7 @@ public class C24Connector {
     
     /**
      * C24-iO Transform.
-     * Transforms an object between models using a C24-iO transform
+     * Transforms an object between models using a C24-iO 1:1 transform
      * <p/>
      * {@sample.xml ../../../doc/C24-connector.xml.sample c24:transform}
      *
@@ -280,6 +305,12 @@ public class C24Connector {
 
         try {
             Transform xform = getTransform(transform, event);
+            
+            
+            if(xform.getInputCount() != 1 || xform.getOutputCount() != 1) {
+                throw new C24Exception(CoreMessages.createStaticMessage("The Transform operation only supports 1:1 transformations. Please use the Transform Advanced operation for n:m transforms."), event);
+            }
+            
             return C24.transform(source, xform);
         } catch (ClassNotFoundException e) {
             throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform."), event, e);
@@ -289,6 +320,78 @@ public class C24Connector {
             throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform."), event, e);
         } catch (ValidationException e) {
             throw new C24Exception(CoreMessages.createStaticMessage("Message is invalid."), event, e);
+        }
+
+    }
+
+    
+    /**
+     * C24-iO Transform n:m
+     * Transforms an object between models using a C24-iO transform
+     * <p/>
+     * {@sample.xml ../../../doc/C24-connector.xml.sample c24:transform}
+     *
+     * @param transform The Transform to use
+     * @param source The source data to be transformed
+     * @param inputs The inputs to the C24-iO transform. Use #[payload] to select the inbound payload.
+     * @param output The index of the transform output to use as the outbound payload.
+     * @param event The Mule event
+     * @return The outputs from the transform
+     * @throws C24Exception if the message cannot be transformed
+     */
+    @Processor
+    @Inject
+    public List<List<Object>> transformAdvanced(String transform,
+                                       @Payload Object source,
+                                       List<String> inputs,
+                                       MuleEvent event) throws C24Exception {
+
+        try {
+            Transform xform = getTransform(transform, event);
+            
+            int numInputs = xform.getInputCount();
+            if(numInputs != inputs.size()) {
+                throw new C24Exception(CoreMessages.createStaticMessage("Transform " + transform + " requires " + numInputs + " inputs, but " + inputs.size() + " were supplied"), event);
+            }
+            
+            Object[][] typedInputs = new Object[numInputs][];
+            for(int i=0; i < numInputs; i++) {
+                String curr = inputs.get(i);
+            
+                if(curr.equals("#[payload]")) {
+                    typedInputs[i] = new Object[]{source};
+                } else {
+                    DataType type = xform.getInput(i).getType();
+                    if(type instanceof SimpleDataType) {
+                        typedInputs[i] = new Object[]{parseObject((SimpleDataType) type, curr)};
+                    } else {
+                        throw new C24Exception(CoreMessages.createStaticMessage("Transform input type " + type.getName() + " is only supported by the C24-iO Mule Connector when it is mapped to the message inbound payload."), event);
+                    }
+                }
+            }
+            
+            Object[][] result = xform.transform(typedInputs);
+            
+            List<List<Object>> ret = new ArrayList<List<Object>>(result.length);
+            
+            if(result != null) {
+                for(int i=0; i < result.length; i++) {
+                    ret.add(Arrays.asList(result[i]));
+                }
+            }
+            
+            return ret;
+
+        } catch (ClassNotFoundException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform."), event, e);
+        } catch (InstantiationException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform."), event, e);
+        } catch (IllegalAccessException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform."), event, e);
+        } catch (ValidationException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage("Message is invalid."), event, e);
+        } catch (ParserException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage("Failed to parse transform input."), event, e);
         }
 
     }
@@ -371,6 +474,10 @@ public class C24Connector {
          try {
              
             Transform t = getTransform(transform, event);
+            
+            if(t.getInputCount() != 1 || t.getOutputCount() != 1) {
+                throw new C24Exception(CoreMessages.createStaticMessage("The Convert operation only supports 1:1 transformations. Please use the Transform Advanced operation for n:m transforms."), event);
+            }
              
             ComplexDataObject src = null;
             if(source instanceof ComplexDataObject) {
@@ -496,4 +603,117 @@ public class C24Connector {
             return null;
         }
     }
+    
+    
+    /**
+     * TODO - This is cloned from LoaderUtils.parseObjectAsXML. Refactor!
+     * @param t
+     * @param str
+     * @return
+     * @throws ParserException
+     */
+    private static Object parseObject(SimpleDataType t, String str) throws ParserException {
+        if (t instanceof NumberDataType) {
+            if (str.startsWith("+")) {
+                str = str.substring(1);
+            }
+            if (str.startsWith(".")) {
+                str = "0" + str;
+            }
+        }
+        if (!(t instanceof StringDataType)) {
+            str = Utils.whitespace(str, WhiteSpaceEnum.COLLAPSE);
+        }
+        if (t instanceof GenericDateDataType) {
+            GenericDateDataType date = (GenericDateDataType)t;
+            if (date.isDate() && date.isTime()) {
+                return ((ISO8601DateTimeDataType)ISO8601DateTimeDataType.getInstance()).parseDate(str);
+            }
+            if (date.isDate()) {
+                return ((ISO8601DateDataType)ISO8601DateDataType.getInstance()).parseDate(str);
+            }
+            if (date.isTime()) {
+                return ((ISO8601TimeDataType)ISO8601TimeDataType.getInstance()).parseDate(str);
+            }
+        }
+        if (t instanceof SQLDateDataType) {
+            return new java.sql.Date(
+                    ((ISO8601DateDataType)ISO8601DateDataType.getInstance()).parseDate(str).getTime()
+            );
+        }
+        if (t instanceof SQLTimeDataType) {
+            return new java.sql.Time(((ISO8601TimeDataType)ISO8601TimeDataType.getInstance()).parseDate(str).getTime());
+        }
+        if (t instanceof SQLTimestampDataType) {
+            return new java.sql.Timestamp(
+                    ((ISO8601DateTimeDataType)ISO8601DateTimeDataType.getInstance()).parseDate(str).getTime()
+            );
+        }
+        if (t instanceof SQLBlobDataType) {
+            return new SQLBlob((byte[])((Base64BinaryDataType)Base64BinaryDataType.getInstance()).parseObject(str));
+        }
+        if (t instanceof SQLClobDataType) {
+            return new SQLClob(str);
+        }
+        if (t instanceof ByteDataType && ((ByteDataType)t).isFormatUsed()) {
+            return ((SimpleDataType)ByteDataType.getInstance()).parseObject(str);
+        }
+        if (t instanceof ShortDataType && ((ShortDataType)t).isFormatUsed()) {
+            return ((SimpleDataType)ShortDataType.getInstance()).parseObject(str);
+        }
+        if (t instanceof IntDataType && ((IntDataType)t).isFormatUsed()) {
+            return ((SimpleDataType)IntDataType.getInstance()).parseObject(str);
+        }
+        if (t instanceof LongDataType && ((LongDataType)t).isFormatUsed()) {
+            return ((SimpleDataType)LongDataType.getInstance()).parseObject(str);
+        }
+        if (t instanceof UnsignedByteDataType && ((UnsignedByteDataType)t).isFormatUsed()) {
+            return ((SimpleDataType)UnsignedByteDataType.getInstance()).parseObject(str);
+        }
+        if (t instanceof UnsignedShortDataType && ((UnsignedShortDataType)t).isFormatUsed()) {
+            return ((SimpleDataType)UnsignedShortDataType.getInstance()).parseObject(str);
+        }
+        if (t instanceof UnsignedIntDataType && ((UnsignedIntDataType)t).isFormatUsed()) {
+            return ((SimpleDataType)UnsignedIntDataType.getInstance()).parseObject(str);
+        }
+        if (t instanceof UnsignedLongDataType && ((UnsignedLongDataType)t).isFormatUsed()) {
+            return ((SimpleDataType)UnsignedLongDataType.getInstance()).parseObject(str);
+        }
+        if (t instanceof PositiveIntegerDataType && ((PositiveIntegerDataType)t).isFormatUsed()) {
+            return ((SimpleDataType)PositiveIntegerDataType.getInstance()).parseObject(str);
+        }
+        if (t instanceof NonNegativeIntegerDataType && ((NonNegativeIntegerDataType)t).isFormatUsed()) {
+            return ((SimpleDataType)NonNegativeIntegerDataType.getInstance()).parseObject(str);
+        }
+        if (t instanceof NegativeIntegerDataType && ((NegativeIntegerDataType)t).isFormatUsed()) {
+            return ((SimpleDataType)NegativeIntegerDataType.getInstance()).parseObject(str);
+        }
+        if (t instanceof NonPositiveIntegerDataType && ((NonPositiveIntegerDataType)t).isFormatUsed()) {
+            return ((SimpleDataType)NonPositiveIntegerDataType.getInstance()).parseObject(str);
+        }
+        if (t instanceof IntegerDataType && ((IntegerDataType)t).isFormatUsed()) {
+            return ((SimpleDataType)IntegerDataType.getInstance()).parseObject(str);
+        }
+        if (t instanceof DecimalDataType && ((DecimalDataType)t).isFormatUsed()) {
+            return ((SimpleDataType)DecimalDataType.getInstance()).parseObject(str);
+        }
+        if (t instanceof FloatDataType && ((FloatDataType)t).isFormatUsed()) {
+            return ((SimpleDataType)FloatDataType.getInstance()).parseObject(str);
+        }
+        if (t instanceof DoubleDataType && ((DoubleDataType)t).isFormatUsed()) {
+            return ((SimpleDataType)DoubleDataType.getInstance()).parseObject(str);
+        }
+        if (t instanceof BooleanDataType) {
+            if (str.equals("1")) {
+                return Boolean.TRUE;
+            }
+            if (str.equals("0")) {
+                return Boolean.FALSE;
+            }
+        }
+
+        return t.parseObject(str);
+    }
+
+    
 }

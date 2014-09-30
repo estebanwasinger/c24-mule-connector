@@ -4,8 +4,10 @@
 
 package biz.c24.io.mule;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Test;
@@ -15,7 +17,9 @@ import org.mule.common.metadata.MetaData;
 import org.mule.common.metadata.MetaDataKey;
 import org.mule.common.metadata.datatype.DataType;
 
+import biz.c24.io.api.C24;
 import biz.c24.io.api.transform.Transform;
+import biz.c24.io.gettingstarted.customer.CustomersFile;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
@@ -110,6 +114,34 @@ public class C24ConnectorTest {
         String output = connector.convert("biz.c24.io.gettingstarted.transform.GenerateContactListTransform", input, null, true, true, null);
         
         assertThat(output, is(readFile("Customers.txt")));
+    }
+    
+    @Test
+    public void testAdvancedTransform() throws IOException, C24Exception {
+        C24Connector connector = new C24Connector();
+        CustomersFile input = C24.parse(CustomersFile.class).from(new File("/Customers.xml"));
+        
+        List<String> params = new LinkedList<String>();
+        params.add("#[payload]");
+        params.add("http://marketing.c24.biz/landing.html");
+        params.add("12345");
+
+        List<List<Object>> output = connector.transformAdvanced("biz.c24.io.gettingstarted.transform.GenerateMarketingLinksTransform", input, params, null);
+        
+        assertThat(output.size(), is(2));
+        
+        List<Object> vals = output.get(0);
+        assertThat(vals.size(), is(4));
+        Object val = vals.get(0);
+        assertTrue(val instanceof String);
+        assertThat((String)val, is("http://marketing.c24.biz/landing.html?campaign=12345&customer=100018"));
+        
+        vals = output.get(1);
+        assertThat(vals.size(), is(3));
+        val = vals.get(0);
+        assertTrue(val instanceof String);
+        assertThat((String)val, is("oliver.twist@c24.biz"));        
+       
     }
     
 }
