@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mule-project xmlns="http://www.mulesoft.com/tooling/project" runtimeId="org.mule.tooling.server.3.5.1.ee" schemaVersion="3.5.0.0">
+    <name>mymuleproject</name>
+    <description></description>
+    <muleExtension name="C24 Connector" qualifier="org.mule.tooling.ui.contribution.c24.3.5.0"/>
+    <muleExtension name="C24-iO Connector" qualifier="org.mule.tooling.ui.contribution.c24"/>
+</mule-project>

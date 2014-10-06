@@ -122,7 +122,7 @@ public class C24ConnectorTest {
         CustomersFile input = C24.parse(CustomersFile.class).from(new File("/Customers.xml"));
         
         List<String> params = new LinkedList<String>();
-        params.add("#[payload]");
+        params.add("#payload");
         params.add("http://marketing.c24.biz/landing.html");
         params.add("12345");
 

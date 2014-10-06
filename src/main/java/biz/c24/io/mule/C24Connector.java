@@ -358,7 +358,7 @@ public class C24Connector {
             for(int i=0; i < numInputs; i++) {
                 String curr = inputs.get(i);
             
-                if(curr.equals("#[payload]")) {
+                if(curr.equals("#payload")) {
                     typedInputs[i] = new Object[]{source};
                 } else {
                     DataType type = xform.getInput(i).getType();

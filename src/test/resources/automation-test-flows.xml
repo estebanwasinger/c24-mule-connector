@@ -37,4 +37,14 @@
     <flow name="contactListNonValidatingConvertFlow" doc:name="contactListNonValidatingConvertFlow">
         <c24:convert config-ref="C24_Connector" transform="biz.c24.io.gettingstarted.transform.GenerateContactListTransform" validateInput="false" validateOutput="false" doc:name="C24 Connector"/>
     </flow>
+    
+    <flow name="generateMarketingLinksTransformFlow">
+        <c24:transform-advanced config-ref="C24_Connector" transform="biz.c24.io.gettingstarted.transform.GenerateMarketingLinksTransform" doc:name="C24-iO Connector">
+            <c24:inputs>
+                <c24:input>#payload</c24:input>
+                <c24:input>http://test</c24:input>
+                <c24:input>12345</c24:input>
+            </c24:inputs>
+        </c24:transform-advanced>
+    </flow>
 </mule>
