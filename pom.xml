@@ -148,6 +148,7 @@
                         <exclude>**/*.sample</exclude>
                         <exclude>**/*.md</exclude>
                         <exclude>**/build-number.txt</exclude>
+                        <exclude>demo/**</exclude>
                         <!-- bamboo -->
                     </excludes>
                 </configuration>
