@@ -153,6 +153,20 @@ Source Reference | Where to read the message from                        | No. D
 Errors during transformation will result in a _C24Exception_ being thrown however neither the input nor the output are validated - you can chain additional instances of the _C24-iO Connector_ with the validate operation in your flows to achieve this.
 
 
+### Operation: Transform Advanced
+
+The advanced version of the transform operation is for n:m C24-iO transforms. 
+
+Parameter        | Details                                                           | Required
+-----------------|-------------------------------------------------------------------|---------
+Type             | The fully-qualified classname of the transform to use             | Yes
+Inputs           | Select _Create Object manually_ and follow the instructions below | Yes
+
+In the Create Object dialog, add one entry for each input that the transform expects. C24-iO will attempt to coerce supplied values into the correct type required by the transform. To map the inbound payload to an input, use the value _#payload_.
+
+The output from the operation is a List of Lists; these lists are constructed according to the definition of your transform.
+
+
 ### Operation: Marshal
 
 ![Configure the marshal operation](img/MarshalConfig.png "Configure the marshal operation")
