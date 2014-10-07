@@ -48,6 +48,7 @@ class C24Util {
      * @return
      * @throws ParserException
      */
+    @SuppressWarnings("all") 
     static Object parseObject(SimpleDataType t, String str) throws ParserException {
         if (t instanceof NumberDataType) {
             if (str.startsWith("+")) {
