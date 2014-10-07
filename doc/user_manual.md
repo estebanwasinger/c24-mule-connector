@@ -155,6 +155,8 @@ Errors during transformation will result in a _C24Exception_ being thrown howeve
 
 ### Operation: Transform Advanced
 
+![Configure the transform advanced operation](img/AdvancedTransformConfig.png "Configure the transform advanced operation")
+
 The advanced version of the transform operation is for n:m C24-iO transforms. 
 
 Parameter        | Details                                                           | Required
