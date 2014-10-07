@@ -124,7 +124,7 @@ Source Reference | Where to read the message from                               
 Encoding         | The character encoding used by the source message            | No. Defaults to model's default character set
 Format           | The textual format of the inbound message                    | No. Defaults to model's default input format.
 
-The parse operation can parse to both C24 CDO & SDOs depending on the type of class specified in the _Type_ parameter.
+The parse operation works with C24 CDO-based classes and returns an instance of the type specified by the _Type_ parameter.
 
 ### Operation: Validate
 
