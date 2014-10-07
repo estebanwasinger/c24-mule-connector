@@ -3,7 +3,6 @@
  */
 package biz.c24.io.mule;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -45,46 +44,13 @@ import org.reflections.util.FilterBuilder;
 import biz.c24.api.LicenseException;
 import biz.c24.io.api.C24;
 import biz.c24.io.api.ParserException;
-import biz.c24.io.api.Utils;
 import biz.c24.io.api.C24.C24Reader;
 import biz.c24.io.api.C24.C24Writer;
-import biz.c24.io.api.data.Base64BinaryDataType;
-import biz.c24.io.api.data.BooleanDataType;
-import biz.c24.io.api.data.ByteDataType;
 import biz.c24.io.api.data.ComplexDataObject;
 import biz.c24.io.api.data.DataType;
-import biz.c24.io.api.data.DecimalDataType;
-import biz.c24.io.api.data.DoubleDataType;
-import biz.c24.io.api.data.FloatDataType;
-import biz.c24.io.api.data.GenericDateDataType;
-import biz.c24.io.api.data.ISO8601DateDataType;
-import biz.c24.io.api.data.ISO8601DateTimeDataType;
-import biz.c24.io.api.data.ISO8601TimeDataType;
-import biz.c24.io.api.data.IntDataType;
-import biz.c24.io.api.data.IntegerDataType;
-import biz.c24.io.api.data.LongDataType;
-import biz.c24.io.api.data.NegativeIntegerDataType;
-import biz.c24.io.api.data.NonNegativeIntegerDataType;
-import biz.c24.io.api.data.NonPositiveIntegerDataType;
-import biz.c24.io.api.data.NumberDataType;
-import biz.c24.io.api.data.PositiveIntegerDataType;
-import biz.c24.io.api.data.SQLBlob;
-import biz.c24.io.api.data.SQLBlobDataType;
-import biz.c24.io.api.data.SQLClob;
-import biz.c24.io.api.data.SQLClobDataType;
-import biz.c24.io.api.data.SQLDateDataType;
-import biz.c24.io.api.data.SQLTimeDataType;
-import biz.c24.io.api.data.SQLTimestampDataType;
-import biz.c24.io.api.data.ShortDataType;
 import biz.c24.io.api.data.SimpleDataObject;
 import biz.c24.io.api.data.SimpleDataType;
-import biz.c24.io.api.data.StringDataType;
-import biz.c24.io.api.data.UnsignedByteDataType;
-import biz.c24.io.api.data.UnsignedIntDataType;
-import biz.c24.io.api.data.UnsignedLongDataType;
-import biz.c24.io.api.data.UnsignedShortDataType;
 import biz.c24.io.api.data.ValidationException;
-import biz.c24.io.api.data.WhiteSpaceEnum;
 import biz.c24.io.api.transform.Transform;
 
 /**
@@ -110,34 +76,10 @@ public class C24Connector {
     @Summary("The path to the licence file to use. Not required for C24-iO Open Edition or if you are only using unlicensed models.")
     private String licenceFile;
     
-    protected transient Log logger = LogFactory.getLog(getClass());
-    
-    protected FileWriter writer = null;
-    
-    private final boolean DEBUG = false;
-    
-    protected java.io.Writer getWriter() {
-        
-        if(writer == null) {
-            try {
-                writer = new FileWriter(new java.io.File("/tmp/op.txt"));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return writer;
-    }
-    
+    private static final transient Log LOG = LogFactory.getLog(C24Connector.class);
+
     protected void debug(String str) {
-        if(DEBUG) {
-            try {
-                getWriter().write(str);
-                getWriter().write('\n');
-                getWriter().flush();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        LOG.debug(str);
     }
     
     private String basePackage = null;
@@ -185,17 +127,99 @@ public class C24Connector {
     }
     
     
-    private Transform getTransform(String transformName, MuleEvent event) throws C24Exception, ClassNotFoundException, InstantiationException, IllegalAccessException {
-        // Check we have a valid transformation
-        Class<?> transformClass =  Class.forName(transformName);
+    /**
+     * Returns an instance of the specified transform
+     * @param transformName
+     * @param event
+     * @return
+     * @throws C24Exception
+     */
+    private Transform getTransform(String transformName, MuleEvent event) throws C24Exception {
+
+        try {
+            Class<?> transformClass = Class.forName(transformName);
          
-        if(!Transform.class.isAssignableFrom(transformClass)) {
-            throw new C24Exception(CoreMessages.createStaticMessage(transformClass.getName() + " is not a valid C24 Transform"), event);
+            // Check we have a valid transformation
+            if(!Transform.class.isAssignableFrom(transformClass)) {
+                throw new C24Exception(CoreMessages.createStaticMessage(transformClass.getName() + " is not a valid C24 Transform"), event);
+            }
+            
+            return (Transform) transformClass.newInstance();
+        } catch (ClassNotFoundException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform"), event, e);
+        } catch (InstantiationException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform"), event, e);
+        } catch (IllegalAccessException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform"), event, e);
+        }
+    }
+    
+    /**
+     * Create a C24Reader capable of parsing the specified type using the (optional) encoding and format
+     * @param type
+     * @param encoding
+     * @param format
+     * @return
+     */
+    private C24Reader<ComplexDataObject> getReader(Class<? extends ComplexDataObject> type,
+                                                             String encoding,
+                                                             C24.Format format) {
+        
+        C24Reader<ComplexDataObject> reader = C24.parse(type);
+        
+        if(encoding != null && encoding.length() > 0) {
+            reader.using(encoding);
+        }
+        if(format != null) {
+            reader.as(format);
         }
         
-        Transform t = (Transform) transformClass.newInstance();
+        return reader;
         
-        return t;
+    }
+    
+    /**
+     * Parse an instance of the specified type from source
+     * @param type
+     * @param source
+     * @param encoding
+     * @param format
+     * @param event
+     * @return
+     * @throws C24Exception
+     */
+    private ComplexDataObject parse(Class<? extends ComplexDataObject> type,
+                                    Object source,
+                                    String encoding,
+                                    C24.Format format,
+                                    MuleEvent event) throws C24Exception {
+        
+
+        if(!ComplexDataObject.class.isAssignableFrom(type)) {
+            throw new C24Exception(CoreMessages.createStaticMessage(type + " is not a valid C24-iO type. It must extend ComplexDataObject."), event);
+        }
+        
+        C24Reader<? extends ComplexDataObject> reader = getReader(type, encoding, format);
+                   
+        try {
+            
+            ComplexDataObject result;
+            
+            if(source instanceof Reader) {
+                result = reader.from((Reader)source);
+            } else if(source instanceof InputStream) {
+                result = reader.from((InputStream)source);            
+            } else if(source instanceof String) {
+                result = reader.from((String)source);            
+            } else {
+                throw new C24Exception(CoreMessages.createStaticMessage("Can't instantiate reader for unknown payload type: " + source.getClass()), event);
+            }    
+            
+            return result;
+            
+        } catch (IOException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage("Failed to parse message."), event, e);
+        }           
     }
     
     
@@ -223,35 +247,14 @@ public class C24Connector {
                                    MuleEvent event) throws C24Exception {
     
         try {
-                Class<? extends ComplexDataObject> typeClass = (Class<? extends ComplexDataObject>) Class.forName(type);
-
+            Class<? extends ComplexDataObject> typeClass = (Class<? extends ComplexDataObject>) Class.forName(type);
             
-            if(!ComplexDataObject.class.isAssignableFrom(typeClass)) {
-                throw new C24Exception(CoreMessages.createStaticMessage(type + " is not a valid C24-iO type. It must extend ComplexDataObject."), event);
-            }
+            return parse(typeClass, source, encoding, format, event);
             
-            C24Reader<? extends ComplexDataObject> reader = C24.parse(typeClass);
-            if(encoding != null && encoding.length() > 0) {
-                reader.using(encoding);
-            }
-            if(format != null) {
-                reader.as(format);
-            }
-            
-            if(source instanceof Reader) {
-                return reader.from((Reader)source);
-            } else if(source instanceof InputStream) {
-                return reader.from((InputStream)source);            
-            } else if(source instanceof String) {
-                return reader.from((String)source);            
-            } else {
-                throw new C24Exception(CoreMessages.createStaticMessage("Can't instantiate reader for unknown payload type: " + source.getClass()), event);
-            }    
         } catch (ClassNotFoundException e) {
             throw new C24Exception(CoreMessages.createStaticMessage(type + " cannot be found."), event, e);
-        } catch (IOException e) {
-            throw new C24Exception(CoreMessages.createStaticMessage("Failed to parse message."), event, e);
-        }     
+        }
+   
     }
  
     
@@ -284,6 +287,29 @@ public class C24Connector {
 
     }
     
+    /**
+     * Invoke a 1:1 C24-iO transform and return the result
+     * @param xform
+     * @param source
+     * @param event
+     * @return
+     * @throws C24Exception
+     */
+    private Object transform(Transform xform,
+                             Object source,
+                             MuleEvent event) throws C24Exception {
+        
+        try {
+            if(xform.getInputCount() != 1 || xform.getOutputCount() != 1) {
+                throw new C24Exception(CoreMessages.createStaticMessage("The Transform operation only supports 1:1 transformations. Please use the Transform Advanced operation for n:m transforms."), event);
+            }
+            
+            return C24.transform(source, xform);
+        } catch (ValidationException e) {
+            throw new C24Exception(CoreMessages.createStaticMessage("Message is invalid."), event, e);
+        }
+    }
+
     
     /**
      * C24-iO Transform.
@@ -300,30 +326,34 @@ public class C24Connector {
     @Processor
     @Inject
     public Object transform(String transform,
-                                       @Optional @Default("#[payload]") Object source,
-                                       MuleEvent event) throws C24Exception {
+                            @Optional @Default("#[payload]") Object source,
+                            MuleEvent event) throws C24Exception {
 
-        try {
-            Transform xform = getTransform(transform, event);
-            
-            
-            if(xform.getInputCount() != 1 || xform.getOutputCount() != 1) {
-                throw new C24Exception(CoreMessages.createStaticMessage("The Transform operation only supports 1:1 transformations. Please use the Transform Advanced operation for n:m transforms."), event);
-            }
-            
-            return C24.transform(source, xform);
-        } catch (ClassNotFoundException e) {
-            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform."), event, e);
-        } catch (InstantiationException e) {
-            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform."), event, e);
-        } catch (IllegalAccessException e) {
-            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform."), event, e);
-        } catch (ValidationException e) {
-            throw new C24Exception(CoreMessages.createStaticMessage("Message is invalid."), event, e);
-        }
-
+        Transform xform = getTransform(transform, event);
+        
+        return transform(xform, source, event);
     }
 
+    
+    /**
+     * Convert the output of a C24-iO transform to List form
+     * @param array
+     * @return
+     */
+    private static List<List<Object>> toList(Object[][] array) {
+        
+        List<List<Object>> ret = null;
+        
+        if(array != null) {
+            ret = new ArrayList<List<Object>>(array.length);
+            
+            for(int i=0; i < array.length; i++) {
+                ret.add(Arrays.asList(array[i]));
+            }
+        }
+        
+        return ret;
+    }
     
     /**
      * C24-iO Transform n:m
@@ -356,38 +386,21 @@ public class C24Connector {
             
             Object[][] typedInputs = new Object[numInputs][];
             for(int i=0; i < numInputs; i++) {
+                
                 String curr = inputs.get(i);
-            
+                DataType type = xform.getInput(i).getType();
+                            
                 if(curr.equals("#payload")) {
                     typedInputs[i] = new Object[]{source};
+                } else if(type instanceof SimpleDataType) {
+                    typedInputs[i] = new Object[]{C24Util.parseObject((SimpleDataType) type, curr)};
                 } else {
-                    DataType type = xform.getInput(i).getType();
-                    if(type instanceof SimpleDataType) {
-                        typedInputs[i] = new Object[]{parseObject((SimpleDataType) type, curr)};
-                    } else {
-                        throw new C24Exception(CoreMessages.createStaticMessage("Transform input type " + type.getName() + " is only supported by the C24-iO Mule Connector when it is mapped to the message inbound payload."), event);
-                    }
+                    throw new C24Exception(CoreMessages.createStaticMessage("Transform input type " + type.getName() + " is only supported by the C24-iO Mule Connector when it is mapped to the message inbound payload."), event);
                 }
             }
             
-            Object[][] result = xform.transform(typedInputs);
-            
-            List<List<Object>> ret = new ArrayList<List<Object>>(result.length);
-            
-            if(result != null) {
-                for(int i=0; i < result.length; i++) {
-                    ret.add(Arrays.asList(result[i]));
-                }
-            }
-            
-            return ret;
+            return toList(xform.transform(typedInputs));
 
-        } catch (ClassNotFoundException e) {
-            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform."), event, e);
-        } catch (InstantiationException e) {
-            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform."), event, e);
-        } catch (IllegalAccessException e) {
-            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform."), event, e);
         } catch (ValidationException e) {
             throw new C24Exception(CoreMessages.createStaticMessage("Message is invalid."), event, e);
         } catch (ParserException e) {
@@ -439,7 +452,7 @@ public class C24Connector {
             return str.toString();
             
         } catch (IOException e) {
-            throw new C24Exception(CoreMessages.createStaticMessage("Failed to marshall message."), event, e);       
+            throw new C24Exception(CoreMessages.createStaticMessage("Failed to marshal message."), event, e);       
         }
         
    
@@ -471,7 +484,7 @@ public class C24Connector {
                             MuleEvent event) throws C24Exception {
 
         
-         try {
+        try {
              
             Transform t = getTransform(transform, event);
             
@@ -483,48 +496,24 @@ public class C24Connector {
             if(source instanceof ComplexDataObject) {
                 src = (ComplexDataObject) source;
             } else {
-                C24Reader<? extends ComplexDataObject> reader = C24.parse(t.getInput(0).getType().getValidObjectClass());
-                if(encoding != null && encoding.length() > 0) {
-                    reader.using(encoding);
-                }
-                
-                if(source instanceof Reader) {
-                    src = reader.from((Reader)source);
-                } else if(source instanceof InputStream) {
-                    src = reader.from((InputStream)source);            
-                } else if(source instanceof String) {
-                    src = reader.from((String)source);            
-                } else {
-                    throw new C24Exception(CoreMessages.createStaticMessage("Can't instantiate reader for unknown payload type: " + source.getClass()), event);
-                }
+                src = parse(t.getInput(0).getType().getValidObjectClass(), source, encoding, null, event);
             }
             
             if(validateInput) {
                 C24.validate(src);
             }
             
-            ComplexDataObject result = C24.transform(src, t);
+            ComplexDataObject result = (ComplexDataObject) transform(t, src, event);
             
             if(validateOutput) {
                 C24.validate(result);
             }
             
-            StringWriter writer = new StringWriter();
-            C24.write(result).to(writer);
-            
-            return writer.toString();
+            return marshal(result, null, null, event);     
             
         } catch(ValidationException vEx) {
             throw new C24Exception(CoreMessages.createStaticMessage("Message is invalid"), event, vEx);
-        } catch (IOException e) {
-            throw new C24Exception(CoreMessages.createStaticMessage("Message is invalid"), event, e);
-        } catch (ClassNotFoundException e) {
-            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform."), event, e);
-        } catch (InstantiationException e) {
-            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform."), event, e);
-        } catch (IllegalAccessException e) {
-            throw new C24Exception(CoreMessages.createStaticMessage("Failed to instantiate transform."), event, e);
-        }
+        } 
     }
     
     private volatile Reflections reflections = null;
@@ -567,6 +556,11 @@ public class C24Connector {
         
     }
     
+    
+    /**
+     * DataSense implementation to get the metadata keys
+     * @return The metadata keys
+     */
 //    @MetaDataKeyRetriever
     //@Override
     public Result<List<MetaDataKey>> getMetaDataKeys() {
@@ -582,11 +576,17 @@ public class C24Connector {
 
             return new DefaultResult<List<MetaDataKey>>(keys);
         } catch(Exception ex) {
+            LOG.debug(ex);
             return null;
         }
         
     }
     
+    /**
+     * DataSense implementation to get the metadata for the supplied key
+     * @param key The metadata key
+     * @return The metadata corresponding to key
+     */
 //    @MetaDataRetriever
     //@Override
     public Result<MetaData> getMetaData(MetaDataKey key) {
@@ -600,120 +600,10 @@ public class C24Connector {
 
             return new DefaultResult<MetaData>(new DefaultMetaData(model));
         } catch(Exception ex) {
+            LOG.debug(ex);
             return null;
         }
     }
     
-    
-    /**
-     * TODO - This is cloned from LoaderUtils.parseObjectAsXML. Refactor!
-     * @param t
-     * @param str
-     * @return
-     * @throws ParserException
-     */
-    private static Object parseObject(SimpleDataType t, String str) throws ParserException {
-        if (t instanceof NumberDataType) {
-            if (str.startsWith("+")) {
-                str = str.substring(1);
-            }
-            if (str.startsWith(".")) {
-                str = "0" + str;
-            }
-        }
-        if (!(t instanceof StringDataType)) {
-            str = Utils.whitespace(str, WhiteSpaceEnum.COLLAPSE);
-        }
-        if (t instanceof GenericDateDataType) {
-            GenericDateDataType date = (GenericDateDataType)t;
-            if (date.isDate() && date.isTime()) {
-                return ((ISO8601DateTimeDataType)ISO8601DateTimeDataType.getInstance()).parseDate(str);
-            }
-            if (date.isDate()) {
-                return ((ISO8601DateDataType)ISO8601DateDataType.getInstance()).parseDate(str);
-            }
-            if (date.isTime()) {
-                return ((ISO8601TimeDataType)ISO8601TimeDataType.getInstance()).parseDate(str);
-            }
-        }
-        if (t instanceof SQLDateDataType) {
-            return new java.sql.Date(
-                    ((ISO8601DateDataType)ISO8601DateDataType.getInstance()).parseDate(str).getTime()
-            );
-        }
-        if (t instanceof SQLTimeDataType) {
-            return new java.sql.Time(((ISO8601TimeDataType)ISO8601TimeDataType.getInstance()).parseDate(str).getTime());
-        }
-        if (t instanceof SQLTimestampDataType) {
-            return new java.sql.Timestamp(
-                    ((ISO8601DateTimeDataType)ISO8601DateTimeDataType.getInstance()).parseDate(str).getTime()
-            );
-        }
-        if (t instanceof SQLBlobDataType) {
-            return new SQLBlob((byte[])((Base64BinaryDataType)Base64BinaryDataType.getInstance()).parseObject(str));
-        }
-        if (t instanceof SQLClobDataType) {
-            return new SQLClob(str);
-        }
-        if (t instanceof ByteDataType && ((ByteDataType)t).isFormatUsed()) {
-            return ((SimpleDataType)ByteDataType.getInstance()).parseObject(str);
-        }
-        if (t instanceof ShortDataType && ((ShortDataType)t).isFormatUsed()) {
-            return ((SimpleDataType)ShortDataType.getInstance()).parseObject(str);
-        }
-        if (t instanceof IntDataType && ((IntDataType)t).isFormatUsed()) {
-            return ((SimpleDataType)IntDataType.getInstance()).parseObject(str);
-        }
-        if (t instanceof LongDataType && ((LongDataType)t).isFormatUsed()) {
-            return ((SimpleDataType)LongDataType.getInstance()).parseObject(str);
-        }
-        if (t instanceof UnsignedByteDataType && ((UnsignedByteDataType)t).isFormatUsed()) {
-            return ((SimpleDataType)UnsignedByteDataType.getInstance()).parseObject(str);
-        }
-        if (t instanceof UnsignedShortDataType && ((UnsignedShortDataType)t).isFormatUsed()) {
-            return ((SimpleDataType)UnsignedShortDataType.getInstance()).parseObject(str);
-        }
-        if (t instanceof UnsignedIntDataType && ((UnsignedIntDataType)t).isFormatUsed()) {
-            return ((SimpleDataType)UnsignedIntDataType.getInstance()).parseObject(str);
-        }
-        if (t instanceof UnsignedLongDataType && ((UnsignedLongDataType)t).isFormatUsed()) {
-            return ((SimpleDataType)UnsignedLongDataType.getInstance()).parseObject(str);
-        }
-        if (t instanceof PositiveIntegerDataType && ((PositiveIntegerDataType)t).isFormatUsed()) {
-            return ((SimpleDataType)PositiveIntegerDataType.getInstance()).parseObject(str);
-        }
-        if (t instanceof NonNegativeIntegerDataType && ((NonNegativeIntegerDataType)t).isFormatUsed()) {
-            return ((SimpleDataType)NonNegativeIntegerDataType.getInstance()).parseObject(str);
-        }
-        if (t instanceof NegativeIntegerDataType && ((NegativeIntegerDataType)t).isFormatUsed()) {
-            return ((SimpleDataType)NegativeIntegerDataType.getInstance()).parseObject(str);
-        }
-        if (t instanceof NonPositiveIntegerDataType && ((NonPositiveIntegerDataType)t).isFormatUsed()) {
-            return ((SimpleDataType)NonPositiveIntegerDataType.getInstance()).parseObject(str);
-        }
-        if (t instanceof IntegerDataType && ((IntegerDataType)t).isFormatUsed()) {
-            return ((SimpleDataType)IntegerDataType.getInstance()).parseObject(str);
-        }
-        if (t instanceof DecimalDataType && ((DecimalDataType)t).isFormatUsed()) {
-            return ((SimpleDataType)DecimalDataType.getInstance()).parseObject(str);
-        }
-        if (t instanceof FloatDataType && ((FloatDataType)t).isFormatUsed()) {
-            return ((SimpleDataType)FloatDataType.getInstance()).parseObject(str);
-        }
-        if (t instanceof DoubleDataType && ((DoubleDataType)t).isFormatUsed()) {
-            return ((SimpleDataType)DoubleDataType.getInstance()).parseObject(str);
-        }
-        if (t instanceof BooleanDataType) {
-            if (str.equals("1")) {
-                return Boolean.TRUE;
-            }
-            if (str.equals("0")) {
-                return Boolean.FALSE;
-            }
-        }
-
-        return t.parseObject(str);
-    }
-
     
 }
