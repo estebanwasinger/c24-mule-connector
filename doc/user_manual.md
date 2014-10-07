@@ -188,23 +188,26 @@ Errors during marshaling will result in a _C24Exception_ being thrown.
 
 ### Operation: Convert
 
-The convert operation chains all of the above operations together to provide a simple one-step mechanism to parse, validate, transform and marshal messages. If you don't need the flexibility of the individual operations or to insert additional logic within this sequence, it is the most concise way to process your messages. 
+![Configure the convert operation](img/ConvertConfig.png "Configure the convert operation")
 
-If you enabled DataSense, the _Transform_ drop down will be populated with the available transforms in your classpath - if not you can manually type in the fully qualified class name of the transform that you wish to use. If you are using DataSense and change your project dependencies, click the _Refresh_ icon to the top-right of the drop down to rescan the classpath.
+The convert operation chains all of the above operations together to provide a simple one-step mechanism to parse, validate, transform 1:1 and marshal messages. If you don't need the flexibility of the individual operations or to insert additional logic within this sequence, it is the most concise way to process your messages. 
 
-_Source Reference_ defaults to using the payload of the inbound message. Under normal circumstances it's unlikely that you'll want to change this.
+Parameter        | Details                                                      | Required
+-----------------|--------------------------------------------------------------|---------
+Transform        | The fully-qualified classname of the transform to use        | Yes
+Source Reference | Where to read the message from                               | No. Defaults to inbound payload
+Encoding         | The character encoding used by the source message            | No. Defaults to model's default character set
+Validate Input   | Whether the inbound message should be validated              | No. Defaults to true
+Validate Output  | Whether the output of the transform should be validated      | No. Defaults to true
 
-When you created your iO models, you will have selected the default encoding that their wire format uses. If you wish to override it, you can set the _Encoding_ parameter to the correct character set.
-
-If the Connector receives a wire-format message it will attempt to parse it according to the input format expected by the transform. If you wish to use iO's semantic validation (in addition to the syntactical validation provided during parsing), select the _Validate Input_ check box.
-
-Equally, semantic validation can be applied to the result of the transform before it is handed off to the next component in the flow - select the _Validate Output_ check box to enable this.
 
 You can then connect other processing components and endpoints to the output of the Connector. The sample below reads messages from a file, transforms the contents and writes the result back to a file.
 
 ![Sample flow](img/SampleFlow.png "Sample Flow")
 
-Any errors during the connector's processing (such as parsing, transformation or validation errors) will result in a _C24Exception_ being thrown.
+### Error Handling
+
+Any C24-iO exceptions during the connector's processing (such as parsing, transformation or validation errors) will result in a _C24Exception_ being thrown.
 
 
 ## Running the Application
