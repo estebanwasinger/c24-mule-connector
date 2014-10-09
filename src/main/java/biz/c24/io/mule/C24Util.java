@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) C24 Technologies Limited. All rights reserved.
+ */
 package biz.c24.io.mule;
 
 import biz.c24.io.api.ParserException;
