@@ -208,7 +208,7 @@ public class C24Connector {
             if(source instanceof Reader) {
                 result = reader.from((Reader)source);
             } else if(source instanceof InputStream) {
-                result = reader.from((InputStream)source);            
+                result = reader.from((InputStream)source);      
             } else if(source instanceof String) {
                 result = reader.from((String)source);            
             } else {
@@ -219,7 +219,17 @@ public class C24Connector {
             
         } catch (IOException e) {
             throw new C24Exception(CoreMessages.createStaticMessage("Failed to parse message."), event, e);
-        }           
+        } finally {
+            try {
+                if(source instanceof Reader) {
+                    ((Reader)source).close();
+                } else if(source instanceof InputStream) {    
+                    ((InputStream)source).close();
+                } 
+            } catch (IOException e) {
+                throw new C24Exception(CoreMessages.createStaticMessage("Failed to close source."), event, e);
+            }
+        }
     }
     
     
@@ -383,19 +393,29 @@ public class C24Connector {
             if(numInputs != inputs.size()) {
                 throw new C24Exception(CoreMessages.createStaticMessage("Transform " + transform + " requires " + numInputs + " inputs, but " + inputs.size() + " were supplied"), event);
             }
-            
+
             Object[][] typedInputs = new Object[numInputs][];
             for(int i=0; i < numInputs; i++) {
                 
-                String curr = inputs.get(i);
+                Object curr = inputs.get(i);
                 DataType type = xform.getInput(i).getType();
-                            
-                if(curr.equals("#payload")) {
-                    typedInputs[i] = new Object[]{source};
-                } else if(type instanceof SimpleDataType) {
-                    typedInputs[i] = new Object[]{C24Util.parseObject((SimpleDataType) type, curr)};
+                
+                if(curr == null) {
+                    typedInputs[i] = new Object[]{null};
+                } else if(curr instanceof ComplexDataObject && type.getValidObjectClass().isAssignableFrom(curr.getClass())) {
+                    typedInputs[i] = new Object[]{curr};
+                } else if(curr instanceof String) {
+                    String name = (String) curr;
+                    
+                    if(name.equals("#payload")) {
+                        typedInputs[i] = new Object[]{source};
+                    } else if(type instanceof SimpleDataType) {
+                        typedInputs[i] = new Object[]{C24Util.parseObject((SimpleDataType) type, name)};
+                    } else {
+                        throw new C24Exception(CoreMessages.createStaticMessage("Transform input type " + type.getName() + " is only supported by the C24-iO Mule Connector when it is mapped to the message inbound payload"), event);
+                    }
                 } else {
-                    throw new C24Exception(CoreMessages.createStaticMessage("Transform input type " + type.getName() + " is only supported by the C24-iO Mule Connector when it is mapped to the message inbound payload."), event);
+                    throw new C24Exception(CoreMessages.createStaticMessage("Input parameter type " + type.getName() + " cannot be populated with supplied type " + curr.getClass().getName()), event);                    
                 }
             }
             
