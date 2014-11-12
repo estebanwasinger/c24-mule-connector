@@ -19,25 +19,14 @@ import biz.c24.io.gettingstarted.customer.CustomersFile;
 
 public class TransformAdvancedTestCases extends C24ConnectorTestCase {
     
-    @Test
-    public void testTransformAdvanced() throws Exception {
-        Customer customer = new Customer();
-        customer.initToMinCardinality();
-        customer.setName("Al Bundy");
-        customer.setCustomerAcronym("AB");
-        customer.setCustomerNumber("135");
-        customer.setPostZipCode("AA11AA");
-        customer.setTelephoneNumber("01234 567890");
-        customer.setFaxNumber("01234 567891");
+    /**
+     * Checks the result of procesing /Customers.xml with the generateMarketingLinks transform
+     */
+    private void validateResult(Object result) {
         
-        CustomersFile file = C24.parse(CustomersFile.class).from(new File("/Customers.xml"));
-        //file.addCustomer(customer);
+        assertTrue(result instanceof List);
         
-        Object obj = runFlow("generateMarketingLinksTransformFlow", file).getMessage().getPayload();
-        
-        assertTrue(obj instanceof List);
-        
-        List list = (List)obj;
+        List list = (List)result;
         
         assertThat(list.size(), is(2));
         
@@ -51,12 +40,31 @@ public class TransformAdvancedTestCases extends C24ConnectorTestCase {
         
         assertThat((String)list.get(0), is("http://test?campaign=12345&customer=100018"));
    
-        list = (List) ((List)obj).get(1);
+        list = (List) ((List)result).get(1);
         
         assertThat(list.size(), is(3));
        
         assertThat((String)list.get(0), is("oliver.twist@c24.biz"));
-
+    }
+    
+    @Test
+    public void testTransformAdvanced() throws Exception {
+        
+        CustomersFile file = C24.parse(CustomersFile.class).from(new File("/Customers.xml"));
+        
+        Object obj = runFlow("generateMarketingLinksTransformFlow", file).getMessage().getPayload();
+        
+        validateResult(obj);
+    }
+    
+    @Test
+    public void testTransformAdvancedExpansion() throws Exception {
+        
+        CustomersFile file = C24.parse(CustomersFile.class).from(new File("/Customers.xml"));
+        
+        Object obj = runFlow("generateMarketingLinksTransformExpandedFlow", file).getMessage().getPayload();
+        
+        validateResult(obj);
     }
 
 }
