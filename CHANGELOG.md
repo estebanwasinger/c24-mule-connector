@@ -1,6 +1,31 @@
 C24 Mule Connector Release Notes
 ================================
 
+## v1.1.1
+
+### Supported C24-iO versions
+
+* C24 4.6.x
+
+### Supported Mule Runtime Versions
+
+* 3.4.2+
+
+### New Features and Functionality
+
+None
+
+### Closed Issues in this release
+
+Explicitly close payload InputStream and Readers once parsing has completed.
+
+### Known Issues in this release
+
+None
+
+
+
+
 ## v1.1.0
 
 
