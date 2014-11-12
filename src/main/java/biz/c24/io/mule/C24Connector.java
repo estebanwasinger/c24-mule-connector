@@ -410,7 +410,7 @@ public class C24Connector {
                     if(name.equals("#payload")) {
                         typedInputs[i] = new Object[]{source};
                     } else if(type instanceof SimpleDataType) {
-                        typedInputs[i] = new Object[]{C24Util.parseObject((SimpleDataType) type, name)};
+                        typedInputs[i] = new Object[]{((SimpleDataType)type).parseObject(name)};
                     } else {
                         throw new C24Exception(CoreMessages.createStaticMessage("Transform input type " + type.getName() + " is only supported by the C24-iO Mule Connector when it is mapped to the message inbound payload"), event);
                     }
