@@ -57,7 +57,7 @@ First we need to tell Maven where it can find the C24-iO jars. Unless you host t
         <repository>
             <id>c24</id>
             <name>C24 Maven Repository</name>
-            <url>http://repo.c24io.net/nexus/content/repositories/releases</url>
+            <url>http://repo.c24io.net/nexus/content/repositories/public</url>
         </repository>
         
 ![Add the C24 Nexus to the repositories section](img/AddC24Nexus.png "Add the C24 Nexus")
@@ -155,7 +155,7 @@ Errors during transformation will result in a _C24Exception_ being thrown howeve
 
 ### Operation: Transform Advanced
 
-![Configure the transform advanced operation](img/AdvancedTransformConfig.png "Configure the transform advanced operation")
+![Configure the transform advanced operation](img/AdvancedTransformObjectConfig.png "Configure the transform advanced operation")
 
 The advanced version of the transform operation is for n:m C24-iO transforms. 
 
@@ -164,7 +164,19 @@ Parameter        | Details                                                      
 Type             | The fully-qualified classname of the transform to use             | Yes
 Inputs           | Select _Create Object manually_ and follow the instructions below | Yes
 
-In the Create Object dialog, add one entry for each input that the transform expects. C24-iO will attempt to coerce supplied values into the correct type required by the transform. To map the inbound payload to an input, use the value _#payload_.
+The inputs cannot be configured via the GUI and are configured by editing the XML under the _Configuration XML_ tab instead.
+
+Beneath the instance of the transform-advanced operation in your flow you will see a <c24:inputs> element; you need to add an input for each input to your transform *in the order that they are declared in the transform's specification*. In the example below, the GenerateMarketingLinksTransform expects an object whose type corresponds to the same type as the inbound payload as its first input, a String as its second input and an Integer as its third:
+
+    <c24:transform-advanced config-ref="C24_Connector" transform="biz.c24.io.gettingstarted.transform.GenerateMarketingLinksTransform" doc:name="Transform">
+        <c24:inputs>
+            <c24:input value-ref="#[payload]"/>
+            <c24:input value-ref="#['http://test']"/>
+            <c24:input value-ref="#[12345]"/>
+        </c24:inputs>
+    </c24:transform-advanced>
+
+Please note that all values need to be specified via the value-ref attribute. Mule Expression Language (MEL) can be used to refer to the payload, access flow variables, specify constants and more; please see the Mule documentation for full details on the available syntax. These expressions are evaluated by Mule and not the C24-iO Mule Connector - the connector simply receives the resulting object and maps it to the relevant input on the transform.
 
 The output from the operation is a List of Lists; these lists are constructed according to the definition of your transform.
 

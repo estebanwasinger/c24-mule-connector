@@ -133,12 +133,12 @@ public class C24ConnectorTest {
         C24Connector connector = new C24Connector();
         CustomersFile input = C24.parse(CustomersFile.class).from(new File("/Customers.xml"));
         
-        List<String> params = new LinkedList<String>();
-        params.add("#payload");
+        List<Object> params = new LinkedList<Object>();
+        params.add(input);
         params.add("http://marketing.c24.biz/landing.html");
-        params.add("12345");
+        params.add(12345);
 
-        List<List<Object>> output = connector.transformAdvanced("biz.c24.io.gettingstarted.transform.GenerateMarketingLinksTransform", input, params, null);
+        List<List<Object>> output = connector.transformAdvanced("biz.c24.io.gettingstarted.transform.GenerateMarketingLinksTransform", params, null);
         
         assertThat(output.size(), is(2));
         

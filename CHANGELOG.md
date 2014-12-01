@@ -1,6 +1,29 @@
 C24 Mule Connector Release Notes
 ================================
 
+## v1.2.0
+
+### Supported C24-iO versions
+
+* C24 4.6.x
+
+### Supported Mule Runtime Versions
+
+* 3.4.2+
+
+### New Features and Functionality
+
+The Transform Advanced operation has changed to take a list of Objects instead of a list of Strings. All existing usages will likely need to be changed in order to use the new version. Please see the user guide for details on how to use the new version of the operation.
+
+### Closed Issues in this release
+
+None
+
+### Known Issues in this release
+
+None
+
+
 ## v1.1.1
 
 ### Supported C24-iO versions

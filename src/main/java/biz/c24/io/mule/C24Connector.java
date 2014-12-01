@@ -385,8 +385,7 @@ public class C24Connector {
      *
      * @param transform The Transform to use
      * @param source The source data to be transformed
-     * @param inputs The inputs to the C24-iO transform. Use #[payload] to select the inbound payload.
-     * @param output The index of the transform output to use as the outbound payload.
+     * @param inputs The inputs to the C24-iO transform.
      * @param event The Mule event
      * @return The outputs from the transform
      * @throws C24Exception if the message cannot be transformed
@@ -394,8 +393,8 @@ public class C24Connector {
     @Processor
     @Inject
     public List<List<Object>> transformAdvanced(String transform,
-                                       @Payload Object source,
-                                       List<String> inputs,
+                         //              @Payload Object source,
+                                       List<Object> inputs,
                                        MuleEvent event) throws C24Exception {
 
         try {
@@ -410,33 +409,18 @@ public class C24Connector {
             for(int i=0; i < numInputs; i++) {
                 
                 Object curr = inputs.get(i);
-                DataType type = xform.getInput(i).getType();
-                
-                if(curr == null) {
-                    typedInputs[i] = new Object[]{null};
-                } else if(curr instanceof ComplexDataObject && type.getValidObjectClass().isAssignableFrom(curr.getClass())) {
-                    typedInputs[i] = new Object[]{curr};
-                } else if(curr instanceof String) {
-                    String name = (String) curr;
-                    
-                    if(name.equals("#payload")) {
-                        typedInputs[i] = new Object[]{source};
-                    } else if(type instanceof SimpleDataType) {
-                        typedInputs[i] = new Object[]{((SimpleDataType)type).parseObject(name)};
-                    } else {
-                        throw new C24Exception(CoreMessages.createStaticMessage("Transform input type " + type.getName() + " is only supported by the C24-iO Mule Connector when it is mapped to the message inbound payload"), event);
-                    }
-                } else {
-                    throw new C24Exception(CoreMessages.createStaticMessage("Input parameter type " + type.getName() + " cannot be populated with supplied type " + curr.getClass().getName()), event);                    
+/*                
+                if(!xform.getInput(i).getType().getValidObjectClass().isAssignableFrom(curr.getClass())) {
+                    // Handle error
                 }
+*/                
+                typedInputs[i] = new Object[]{curr};
             }
             
             return toList(xform.transform(typedInputs));
 
         } catch (ValidationException e) {
             throw new C24Exception(CoreMessages.createStaticMessage("Message is invalid."), event, e);
-        } catch (ParserException e) {
-            throw new C24Exception(CoreMessages.createStaticMessage("Failed to parse transform input."), event, e);
         }
 
     }
