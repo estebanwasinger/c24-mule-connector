@@ -67,12 +67,18 @@ Next we need to add the C24-iO Runtime jars to the project's dependencies. Add t
         <dependency>
             <groupId>biz.c24.io</groupId>
             <artifactId>c24-io-api</artifactId>
-            <version>4.6.5</version>
+            <version>4.6.9</version>
         </dependency>
         
 ![Add the C24-iO Runtime jars](img/AddIoDependency.png "Add the C24-iO Runtime jars")     
 
-You've now wired in C24 iO!
+You've now wired in C24-iO!
+
+### Resolving Saxon incompatibilities
+
+Some versions of Mule bundle an old version of the Saxon library that is incompatible with that required by C24-iO; this will cause C24-iO processing to fail with exceptions relating to Saxon. You will need to instruct Mule to allow C24-iO to load its own version of the Saxon classes by adding the following to the src/main/app/mule-deploy.properties file of your application:
+
+    loader.override=net.sf.saxon,com.saxonica,w3c
     
 
 ### Adding your custom models and transforms
