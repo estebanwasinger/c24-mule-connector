@@ -37,7 +37,6 @@ import org.mule.api.annotations.Processor;
 import org.mule.api.annotations.display.Summary;
 import org.mule.api.annotations.param.Default;
 import org.mule.api.annotations.param.Optional;
-import org.mule.api.annotations.param.Payload;
 import org.mule.common.DefaultResult;
 import org.mule.common.Result;
 import org.mule.common.metadata.DefaultMetaData;
@@ -55,13 +54,10 @@ import org.reflections.util.FilterBuilder;
 
 import biz.c24.api.LicenseException;
 import biz.c24.io.api.C24;
-import biz.c24.io.api.ParserException;
 import biz.c24.io.api.C24.C24Reader;
 import biz.c24.io.api.C24.C24Writer;
 import biz.c24.io.api.data.ComplexDataObject;
-import biz.c24.io.api.data.DataType;
 import biz.c24.io.api.data.SimpleDataObject;
-import biz.c24.io.api.data.SimpleDataType;
 import biz.c24.io.api.data.ValidationException;
 import biz.c24.io.api.transform.Transform;
 
