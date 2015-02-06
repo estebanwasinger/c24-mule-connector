@@ -19,7 +19,7 @@ The Mule C24 Connector can be used with Mule Maven projects. To get started, cre
 		<dependency>
 			<groupId>biz.c24.io</groupId>
 			<artifactId>c24-io-api</artifactId>
-			<version>4.6.1</version>
+			<version>4.6.9</version>
 		</dependency>
 		
 To specify the version of iO that you wish to use. Don't forget to add the C24 nexus to the repositories if you haven't installed the jars locally:

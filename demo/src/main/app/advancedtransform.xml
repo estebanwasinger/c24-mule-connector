@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:c24="http://www.mulesoft.org/schema/mule/c24"
+      xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.5.1"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+      http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+      http://www.mulesoft.org/schema/mule/c24 http://www.mulesoft.org/schema/mule/c24/current/mule-c24.xsd"
+        >
+
+    <c24:config name="C24_iO_Connector" doc:name="C24-iO Connector"/>
+    <flow name="advancedTransformFlow" doc:name="advancedTransformFlow">
+        <file:inbound-endpoint path="/tmp" responseTimeout="10000" doc:name="File">
+            <file:filename-regex-filter pattern=".*\.xml" caseSensitive="true"/>
+        </file:inbound-endpoint>
+        <c24:transform-advanced config-ref="C24_Connector"
+                                transform="biz.c24.io.gettingstarted.transform.GenerateMarketingLinksTransform"
+                                doc:name="C24-iO Connector">
+            <c24:inputs>
+                <c24:input value-ref="#[payload]"/>
+                <c24:input value-ref="#['http://test']"/>
+                <c24:input value-ref="#[12345]"/>
+            </c24:inputs>
+        </c24:transform-advanced>
+        <c24:marshal config-ref="C24_iO_Connector" format="XML" doc:name="Marshal to XML"/>
+        <file:outbound-endpoint path="/tmp" outputPattern="#[message.inboundProperties['originalFilename']].xml" responseTimeout="10000" doc:name="File"/>
+    </flow>
+
+</mule>

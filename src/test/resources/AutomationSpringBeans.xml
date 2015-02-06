@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="customerTestData" class="biz.c24.io.gettingstarted.customer.Customer" init-method="initToMinCardinality">
+        <property name="name" value="Al Bundy"/>
+        <property name="customerAcronym" value="AB"/>
+        <property name="customerNumber" value="1"/>
+        <property name="postZipCode" value="AA11AA"/>
+        <property name="telephoneNumber" value="01234 567890"/>
+        <property name="faxNumber" value="01234 567890"/>
+    </bean>
+
+    <bean id="inputPayload" class="java.lang.String">
+        <constructor-arg>
+            <bean class="org.springframework.util.FileCopyUtils" factory-method="copyToByteArray">
+                <constructor-arg value="classpath:testdata/Customers.xml" type="java.io.InputStream" />
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="outputPayload" class="java.lang.String">
+        <constructor-arg>
+            <bean class="org.springframework.util.FileCopyUtils" factory-method="copyToByteArray">
+                <constructor-arg value="classpath:testdata/Customers.txt" type="java.io.InputStream" />
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="invalidPayload" class="java.lang.String">
+        <constructor-arg>
+            <bean class="org.springframework.util.FileCopyUtils" factory-method="copyToByteArray">
+                <constructor-arg value="classpath:testdata/InvalidCustomers.xml" type="java.io.InputStream" />
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="illegalPayload" class="java.lang.String">
+        <constructor-arg>
+            <bean class="org.springframework.util.FileCopyUtils" factory-method="copyToByteArray">
+                <constructor-arg value="classpath:testdata/IllegalCustomers.xml" type="java.io.InputStream" />
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="marshalledPayload" class="java.lang.String">
+        <constructor-arg>
+            <bean class="org.springframework.util.FileCopyUtils" factory-method="copyToByteArray">
+                <constructor-arg value="classpath:testdata/MarshalledData.xml" type="java.io.InputStream" />
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="marshalledJsonPayload" class="java.lang.String">
+        <constructor-arg>
+            <bean class="org.springframework.util.FileCopyUtils" factory-method="copyToByteArray">
+                <constructor-arg value="classpath:testdata/MarshalledJsonData.txt" type="java.io.InputStream" />
+            </bean>
+        </constructor-arg>
+    </bean>
+
+</beans>

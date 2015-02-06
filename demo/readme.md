@@ -68,3 +68,13 @@ Right click on the mymuleproject.xml file and select _Run As_ -> _Mule Applicati
 
 If you have debug logging enabled, you'll see Mule pick up the file and run it through the flow. Once complete, look in the output directory (default also /tmp) for Customers.xml.txt to view the result of the transformation.
 
+
+# Other Flows
+
+## src/main/app/advancedtransform
+
+This flow demonstrates using the transformAdvanced() operation which can handle multiple inputs to a transformation
+
+## src/main/app/convertOperation
+
+This flow demonstrates use of the convert() operation which is a convenience method encompassing parse/validate/transform/marshall

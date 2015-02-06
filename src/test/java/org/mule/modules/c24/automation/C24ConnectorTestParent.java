@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package biz.c24.io.mule;
+package org.mule.modules.c24.automation;
 
 import static org.junit.Assert.assertEquals;
 
+import biz.c24.io.api.C24;
+import biz.c24.io.gettingstarted.customer.CustomersFile;
 import org.mule.api.MuleEvent;
 import org.mule.construct.Flow;
 import org.mule.modules.tests.ConnectorTestCase;
 
-public abstract class C24ConnectorTestCase extends ConnectorTestCase {
+public abstract class C24ConnectorTestParent extends ConnectorTestCase {
     
     // =============================
     // Backporting from DevKit 3.5.0
@@ -61,7 +63,7 @@ public abstract class C24ConnectorTestCase extends ConnectorTestCase {
     {
         return (Flow) muleContext.getRegistry().lookupFlowConstruct(name);
     }
-    
+
 
     /**
     * Run the flow specified by name and assert equality on the expected output
@@ -86,6 +88,10 @@ public abstract class C24ConnectorTestCase extends ConnectorTestCase {
     {
         assertEquals(expect, this.runFlow(flowName, payload).getMessage().getPayload());
     }
-    
+
+    protected CustomersFile getCustomerTestFixture() throws Exception {
+        return C24.parse(CustomersFile.class).from((String)getBeanFromContext("inputPayload"));
+    }
+
 
 }

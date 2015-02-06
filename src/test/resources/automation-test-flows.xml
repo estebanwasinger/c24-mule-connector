@@ -10,8 +10,13 @@
 >
     <c24:config name="C24_Connector" doc:name="C24 Connector"/>
     
-    <flow name="customersFileParseFlow">
+    <flow name="parse">
         <c24:parse type="biz.c24.io.gettingstarted.customer.CustomersFile"/>
+    </flow>
+
+    <flow name="parse-with-options">
+        <c24:parse type="biz.c24.io.gettingstarted.customer.CustomersFile"
+                   encoding="#[flowVars.encoding]" format="#[flowVars.format]"/>
     </flow>
     
     <flow name="validateFlow">
@@ -47,14 +52,5 @@
             </c24:inputs>
         </c24:transform-advanced>
     </flow>
-    
-    <flow name="generateMarketingLinksTransformExpandedFlow">
-        <c24:transform-advanced config-ref="C24_Connector" transform="biz.c24.io.gettingstarted.transform.GenerateMarketingLinksTransform" doc:name="C24-iO Connector">
-            <c24:inputs>
-                <c24:input value-ref="#[payload]"/>
-                <c24:input value-ref="#['http://test']"/>
-                <c24:input value-ref="#[12345]"/>
-            </c24:inputs>
-        </c24:transform-advanced>
-    </flow>
+
 </mule>

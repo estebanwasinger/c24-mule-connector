@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Al Bundy xmlns="http://www.c24.biz/io/GettingStarted/Customer">
+    <CustomerNumber>1</CustomerNumber>
+    <CustomerAcronym>AB</CustomerAcronym>
+    <Address>
+        <AddressLine/>
+        <AddressLine/>
+        <AddressLine/>
+        <AddressLine/>
+        <AddressLine/>
+    </Address>
+    <PostZipCode>AA11AA</PostZipCode>
+    <TelephoneNumber>01234 567890</TelephoneNumber>
+    <BIC/>
+    <FaxNumber>01234 567890</FaxNumber>
+    <TelexNumber/>
+    <CountryOfResidence/>
+    <FedwireCode/>
+    <ChipsParticipantCode/>
+    <ChipsUID/>
+    <SortCode/>
+    <BankleitzhalCode/>
+</Al Bundy>
