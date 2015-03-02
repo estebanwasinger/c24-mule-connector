@@ -57,7 +57,7 @@ Install your jars below this directory as per standard Maven practice, then you 
 Usage
 -----
 
-Please see [doc/user_manual.md](doc/usermanual_md).
+Please see doc/usermanual_md.
 
 
 
