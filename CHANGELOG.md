@@ -1,11 +1,34 @@
 C24 Mule Connector Release Notes
 ================================
 
+## v1.3.0
+
+### Supported C24-iO versions
+
+* C24-iO 4.7.x
+
+### Supported Mule Runtime Versions
+
+* 3.4.2+
+
+### New Features and Functionality
+
+This release provides compatibility with C24-iO v4.7.x; it will work with v4.6.x unless you are using the Format property on the marshall/unmarshall operations. It also replaces the previous white connector icon with a blue one.
+
+### Closed Issues in this release
+
+None
+
+### Known Issues in this release
+
+None
+
+
 ## v1.2.0
 
 ### Supported C24-iO versions
 
-* C24 4.6.x
+* C24-iO 4.6.x
 
 ### Supported Mule Runtime Versions
 

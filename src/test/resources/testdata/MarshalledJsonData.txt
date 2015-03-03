@@ -1,26 +1,18 @@
-{
-	"Al Bundy":{
-		"CustomerNumber":"1",
-		"CustomerAcronym":"AB",
-		"Address":{
-			"AddressLine":[
-				,
-				,
-				,
-				,
-
-			]
-		},
-		"PostZipCode":"AA11AA",
-		"TelephoneNumber":"01234 567890",
-		"BIC": null,
-		"FaxNumber":"01234 567890",
-		"TelexNumber": null,
-		"CountryOfResidence": null,
-		"FedwireCode": null,
-		"ChipsParticipantCode": null,
-		"ChipsUID": null,
-		"SortCode": null,
-		"BankleitzhalCode": null
-	}
-}
+{ 
+  "CustomerNumber": "1",
+  "CustomerAcronym": "AB",
+  "Address": { 
+    "AddressLine": [ "","","","","" ]
+  } ,
+  "PostZipCode": "AA11AA",
+  "TelephoneNumber": "01234 567890",
+  "BIC": "",
+  "FaxNumber": "01234 567890",
+  "TelexNumber": "",
+  "CountryOfResidence": "",
+  "FedwireCode": "",
+  "ChipsParticipantCode": "",
+  "ChipsUID": "",
+  "SortCode": "",
+  "BankleitzhalCode": ""
+} 

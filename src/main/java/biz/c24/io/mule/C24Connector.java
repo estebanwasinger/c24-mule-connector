@@ -64,6 +64,22 @@ import java.util.List;
 @Connector(name = "c24", schemaVersion = "1.1.0", friendlyName = "C24-iO Connector", minMuleVersion="3.4",
             description = "The C24 Connector allows you to use C24 iO message parsing, validation, transformation and generation in your Mule flows")
 public class C24Connector {
+    
+    
+    public static enum Format {
+        JSON(C24.Format.JSONv2),
+        Text(C24.Format.TEXT),
+        TagValue(C24.Format.TAG_VALUE),
+        XML(C24.Format.XML),;
+        
+        private Format(C24.Format format) {
+            this.format = format;
+        }
+        private C24.Format format;
+        public C24.Format getFormat() {
+            return format;
+        }
+    }
 
 
     /**
@@ -94,7 +110,7 @@ public class C24Connector {
     public ComplexDataObject parse(String type,
                                    @Optional @Default("#[payload]") Object source,
                                    @Optional String encoding,
-                                   @Optional C24.Format format,
+                                   @Optional Format format,
                                    MuleEvent event) throws C24Exception {
 
         try {
@@ -219,7 +235,7 @@ public class C24Connector {
     @Processor
     @Inject
     public String marshal(@Optional @Default("#[payload]") Object source,
-                          @Optional C24.Format format,
+                          @Optional Format format,
                           @Optional String encoding,
                           MuleEvent event) throws C24Exception {
         C24Writer<? extends ComplexDataObject> writer;
@@ -234,7 +250,7 @@ public class C24Connector {
             }
 
             if(format != null) {
-                writer.as(format);
+                writer.as(format.getFormat());
             }
             if(encoding != null) {
                 writer.using(encoding);
@@ -392,17 +408,17 @@ public class C24Connector {
      * @param format
      * @return
      */
-    private C24Reader<ComplexDataObject> getReader(Class<? extends ComplexDataObject> type,
+    private C24Reader<? extends ComplexDataObject> getReader(Class<? extends ComplexDataObject> type,
                                                              String encoding,
-                                                             C24.Format format) {
+                                                             Format format) {
         
-        C24Reader<ComplexDataObject> reader = C24.parse(type);
+        C24Reader<? extends ComplexDataObject> reader = C24.parse(type);
         
         if(encoding != null && encoding.length() > 0) {
             reader.using(encoding);
         }
         if(format != null) {
-            reader.as(format);
+            reader.as(format.getFormat());
         }
         
         return reader;
@@ -422,7 +438,7 @@ public class C24Connector {
     private ComplexDataObject parse(Class<? extends ComplexDataObject> type,
                                     Object source,
                                     String encoding,
-                                    C24.Format format,
+                                    Format format,
                                     MuleEvent event) throws C24Exception {
         
 
