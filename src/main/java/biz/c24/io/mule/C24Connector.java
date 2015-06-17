@@ -64,8 +64,8 @@ import java.util.List;
 @Connector(name = "c24", schemaVersion = "1.1.0", friendlyName = "C24-iO Connector", minMuleVersion="3.4",
             description = "The C24 Connector allows you to use C24 iO message parsing, validation, transformation and generation in your Mule flows")
 public class C24Connector {
-    
-    
+
+
     public static enum Format {
         JSON(C24.Format.JSONv2),
         Text(C24.Format.TEXT),
@@ -106,9 +106,8 @@ public class C24Connector {
      * @throws C24Exception if the message cannot be parsed
      */
     @Processor
-    @Inject
     public ComplexDataObject parse(String type,
-                                   @Optional @Default("#[payload]") Object source,
+                                   @Default("#[payload]") Object source,
                                    @Optional String encoding,
                                    @Optional Format format,
                                    MuleEvent event) throws C24Exception {
@@ -136,8 +135,7 @@ public class C24Connector {
      * @throws C24Exception if the message is invalid.
      */
     @Processor
-    @Inject
-    public ComplexDataObject validate(@Optional @Default("#[payload]") Object source,
+    public ComplexDataObject validate(@Default("#[payload]") Object source,
                                       MuleEvent event) throws C24Exception {
         try {
             if(source instanceof ComplexDataObject) {
@@ -167,9 +165,8 @@ public class C24Connector {
      * @throws C24Exception if the message cannot be transformed
      */
     @Processor
-    @Inject
     public Object transform(String transform,
-                            @Optional @Default("#[payload]") Object source,
+                            @Default("#[payload]") Object source,
                             MuleEvent event) throws C24Exception {
 
         Transform xform = getTransform(transform, event);
@@ -190,7 +187,6 @@ public class C24Connector {
      * @throws C24Exception if the message cannot be transformed
      */
     @Processor
-    @Inject
     public List<List<Object>> transformAdvanced(String transform,
                                                 List<Object> inputs,
                                                 MuleEvent event) throws C24Exception {
@@ -233,8 +229,7 @@ public class C24Connector {
      * @throws C24Exception if the message cannot be marshalled
      */
     @Processor
-    @Inject
-    public String marshal(@Optional @Default("#[payload]") Object source,
+    public String marshal(@Default("#[payload]") Object source,
                           @Optional Format format,
                           @Optional String encoding,
                           MuleEvent event) throws C24Exception {
@@ -284,12 +279,11 @@ public class C24Connector {
      * @throws C24Exception An exception when there's an error
      */
     @Processor
-    @Inject
     public String convert(/* @MetaDataKeyParam */ String transform,
-                          @Optional @Default("#[payload]") Object source,
-                          @Optional @Default("") String encoding,
-                          @Optional @Default("true") boolean validateInput,
-                          @Optional @Default("true") boolean validateOutput,
+                          @Default("#[payload]") Object source,
+                          @Default("") String encoding,
+                          @Default("true") boolean validateInput,
+                          @Default("true") boolean validateOutput,
                           MuleEvent event) throws C24Exception {
 
 

@@ -31,7 +31,7 @@ public abstract class C24ConnectorTestParent extends ConnectorTestCase {
     // =============================
     
     
-    protected <T> MuleEvent runFlow(String flowName) throws Exception
+    protected <T> MuleEvent runFlowNullPayload(String flowName) throws Exception
     {
         return runFlow(flowName, null);
     }
@@ -73,7 +73,7 @@ public abstract class C24ConnectorTestParent extends ConnectorTestCase {
     */
     protected <T> void runFlowAndExpect(String flowName, T expect) throws Exception
     {
-        assertEquals(expect, this.runFlow(flowName));
+        assertEquals(expect, this.runFlowNullPayload(flowName));
     }
     
     /**

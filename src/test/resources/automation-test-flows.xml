@@ -11,38 +11,38 @@
     <c24:config name="C24_Connector" doc:name="C24 Connector"/>
     
     <flow name="parse">
-        <c24:parse type="biz.c24.io.gettingstarted.customer.CustomersFile"/>
+        <c24:parse config-ref="C24_Connector" type="biz.c24.io.gettingstarted.customer.CustomersFile"/>
     </flow>
 
     <flow name="parse-with-options">
-        <c24:parse type="biz.c24.io.gettingstarted.customer.CustomersFile"
+        <c24:parse config-ref="C24_Connector" type="biz.c24.io.gettingstarted.customer.CustomersFile"
                    encoding="#[flowVars.encoding]" format="#[flowVars.format]"/>
     </flow>
-    
+
     <flow name="validateFlow">
-        <c24:validate/>
+        <c24:validate config-ref="C24_Connector"/>
     </flow>
-    
+
     <flow name="customersFileTransformFlow">
-        <c24:transform transform="biz.c24.io.gettingstarted.transform.GenerateContactListTransform"/>
+        <c24:transform config-ref="C24_Connector" transform="biz.c24.io.gettingstarted.transform.GenerateContactListTransform"/>
     </flow>
-    
+
     <flow name="marshalFlow">
-        <c24:marshal/>
+        <c24:marshal config-ref="C24_Connector" />
     </flow>
-    
+
     <flow name="jsonMarshalFlow">
-        <c24:marshal format="JSON" encoding="ASCII"/>
+        <c24:marshal config-ref="C24_Connector" format="JSON" encoding="ASCII"/>
     </flow>
-    
+
     <flow name="contactListConvertFlow" doc:name="contactListConvertFlow">
         <c24:convert config-ref="C24_Connector" transform="biz.c24.io.gettingstarted.transform.GenerateContactListTransform" doc:name="C24 Connector"/>
     </flow>
-    
+
     <flow name="contactListNonValidatingConvertFlow" doc:name="contactListNonValidatingConvertFlow">
         <c24:convert config-ref="C24_Connector" transform="biz.c24.io.gettingstarted.transform.GenerateContactListTransform" validateInput="false" validateOutput="false" doc:name="C24 Connector"/>
     </flow>
-    
+
     <flow name="generateMarketingLinksTransformFlow">
         <c24:transform-advanced config-ref="C24_Connector" transform="biz.c24.io.gettingstarted.transform.GenerateMarketingLinksTransform" doc:name="C24-iO Connector">
             <c24:inputs>
